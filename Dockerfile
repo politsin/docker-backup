@@ -9,7 +9,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 #APT-GET:::
 RUN apt-get update && \
-    apt-get install -y software-properties-common apt-utils curl && \
+    apt-get install -y software-properties-common apt-utils curl wget && \
     apt-get install -y php7.0 \
                        php7.0-fpm \
                        php7.0-dev \
@@ -40,17 +40,11 @@ RUN wget https://s3.amazonaws.com/files.drush.org/drush.phar -q -O drush \
 RUN pip install awscli
 
 #COPY script & config:::
-COPY config/php/www.conf /etc/php/7.0/fpm/pool.d/www.conf
-COPY config/php/php.ini /etc/php/7.0/fpm/php.ini
-COPY config/php/opcache.ini /etc/php/7.0/mods-available/opcache.ini
 COPY config/start.sh /start.sh
 
 #Fix ownership
 RUN chmod 755 /start.sh && \
     mkdir /run/php && \
-    chown -R www-data.www-data /run/php && \
-    chown www-data.www-data /var/spool/cron/crontabs/www-data && \
-    chmod 0777 /var/spool/cron/crontabs && \
-    chmod 0600 /var/spool/cron/crontabs/www-data
+    chown -R www-data.www-data /run/php
 
 ENTRYPOINT ["/start.sh"]

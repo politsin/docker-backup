@@ -7,17 +7,19 @@ cp /usr/share/zoneinfo/Europe/Moscow /etc/localtime
 usermod -d /var/www/ www-data
 chsh -s /bin/bash www-data
 
-echo "start dump"
+if [[ "$DBDUMP" == "true" ]]; then
+  
+  /usr/local/bin/drush sql-dump --root=/var/www/html --result-file=$DBFILE $DBSKIP
+  chown www-data:www-data /var/www/html/.db.sql
+fi
 
-/usr/local/bin/drush sql-dump --root=/var/www/html --result-file=/var/www/html/.adminer.sql --skip-tables-list=cache,cache_*,search_*,watchdog,history,sessions
-chown www-data:www-data /var/www/html/.adminer.sql
 
 if [[ "$RESTORE" == "true" ]]; then
   # Find last backup file
-  : ${LAST_BACKUP:=$(aws s3 ls s3://$BUCKET | awk -F " " '{print $4}' | grep ^$BACKUP_NAME | sort -r | head -n1)}
+  : ${LAST_BACKUP:=$(aws s3 ls s3://$S3_BUCKET_NAME | awk -F " " '{print $4}' | grep ^$BACKUP_NAME | sort -r | head -n1)}
   
   # Download backup from S3
-  aws s3 cp s3://$BUCKET/$LAST_BACKUP $LAST_BACKUP
+  aws s3 cp s3://$S3_BUCKET_NAME/$LAST_BACKUP $LAST_BACKUP
   
   # Extract backup
   tar xzf $LAST_BACKUP $RESTORE_TAR_OPTION
@@ -27,16 +29,21 @@ else
   readonly tarball=$BACKUP_NAME$BACKUP_SUFFIX.tar.gz
   
   # Create a gzip compressed tarball with the volume(s)
-  echo "start tar"
-  echo "opts $BACKUP_TAR_OPTION"
+  echo "start tar with opts $BACKUP_TAR_OPTION"
   tar czf $tarball $BACKUP_PATHS $BACKUP_TAR_OPTION
-  echo "end tar"
+  # Clean db file
+  if [[ "$DBDUMP" == "/var/www/html/.db.sql" ]]; then
+    rm '/var/www/html/.db.sql'
+  fi
 
   # Upload the backup to S3 with timestamp
-  aws s3 --region $REGION cp $tarball s3://$BUCKET/$tarball
-  echo "end aws cp"
+  echo "start aws s3 upload"
+  aws s3 --region $AWS_DEFAULT_REGION cp $tarball s3://$S3_BUCKET_NAME/$tarball
+  echo "done"
 
   # Clean up
   rm $tarball
   
 fi
+
+
