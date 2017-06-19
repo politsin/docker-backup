@@ -3,4 +3,4 @@
 use strict;
 use warnings;
 chdir("/opt/docker-backup");
-system("docker build -t docker-backup:0.9 .");
+system("docker build -t docker-backup:1.0 .");

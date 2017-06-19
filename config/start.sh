@@ -7,11 +7,7 @@ cp /usr/share/zoneinfo/Europe/Moscow /etc/localtime
 usermod -d /var/www/ www-data
 chsh -s /bin/bash www-data
 
-if [[ "$DBDUMP" == "true" ]]; then
-  
-  /usr/local/bin/drush sql-dump --root=/var/www/html --result-file=$DBFILE $DBSKIP
-  chown www-data:www-data /var/www/html/.db.sql
-fi
+
 
 
 if [[ "$RESTORE" == "true" ]]; then
@@ -23,7 +19,18 @@ if [[ "$RESTORE" == "true" ]]; then
   
   # Extract backup
   tar xzf $LAST_BACKUP $RESTORE_TAR_OPTION
+  echo "\$databases['default']['default']['password'] = '$DBPASS';" >> /var/www/html/sites/default/settings.php
+
+  if [[ "$DBRESTORE" == "true" ]]; then
+    mysql -u drupal -p$DBPASS drupal < /var/www/html/.db.sql
+  fi
+
 else
+  if [[ "$DBDUMP" == "true" ]]; then
+  
+    /usr/local/bin/drush sql-dump --root=/var/www/html --result-file=$DBFILE $DBSKIP
+    chown www-data:www-data /var/www/html/.db.sql
+  fi
   # Get timestamp
   : ${BACKUP_SUFFIX:=.$(date +"%Y-%m-%d-%H-%M-%S")}
   readonly tarball=$BACKUP_NAME$BACKUP_SUFFIX.tar.gz
