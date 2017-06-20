@@ -35,7 +35,7 @@ else
   echo "start tar with opts $BACKUP_TAR_OPTION"
   tar czf $tarball $BACKUP_PATHS $BACKUP_TAR_OPTION
   # Clean db file
-  if [[ "$DBDUMP" == "/var/www/html/.db.sql" ]]; then
+  if [[ "$DBDUMP" == "true" and "$DBFILE" == "/var/www/html/.db.sql" ]]; then
     rm '/var/www/html/.db.sql'
   fi
 
