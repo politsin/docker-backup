@@ -18,7 +18,7 @@ if [[ "$RESTORE" == "true" ]]; then
   echo "\$databases['default']['default']['password'] = '$DBPASS';" >> /var/www/html/sites/default/settings.php
 
   if [[ "$DBRESTORE" == "true" ]]; then
-    mysql -u drupal -p$DBPASS drupal < /var/www/html/.db.sql
+    mysql -udrupal -p$DBPASS drupal < /var/www/html/.db.sql
   fi
 
 else
@@ -48,5 +48,3 @@ else
   rm $tarball
   
 fi
-
-
