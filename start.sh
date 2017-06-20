@@ -6,10 +6,6 @@ cp /usr/share/zoneinfo/Europe/Moscow /etc/localtime
 # www-data user
 usermod -d /var/www/ www-data
 chsh -s /bin/bash www-data
-
-
-
-
 if [[ "$RESTORE" == "true" ]]; then
   # Find last backup file
   : ${LAST_BACKUP:=$(aws s3 ls s3://$S3_BUCKET_NAME | awk -F " " '{print $4}' | grep ^$BACKUP_NAME | sort -r | head -n1)}

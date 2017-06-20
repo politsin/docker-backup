@@ -40,7 +40,7 @@ RUN wget https://s3.amazonaws.com/files.drush.org/drush.phar -q -O drush \
 RUN pip install awscli
 
 #COPY script & config:::
-COPY config/start.sh /start.sh
+COPY start.sh /start.sh
 
 #Fix ownership
 RUN chmod 755 /start.sh && \
