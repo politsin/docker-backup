@@ -3,5 +3,5 @@
 use strict;
 use warnings;
 chdir("/opt/docker-backup");
-system("docker build -t docker-backup:1.0 .");
-system("docker tag docker-backup:1.0 docker-backup:latest");
+system("docker build -t docker-backup:1.1 .");
+system("docker tag docker-backup:1.1 docker-backup:latest");
