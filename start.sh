@@ -3,9 +3,6 @@
 echo "Europe/Moscow" > /etc/timezone                     
 cp /usr/share/zoneinfo/Europe/Moscow /etc/localtime 
 
-# www-data user
-usermod -d /var/www/ www-data
-chsh -s /bin/bash www-data
 if [[ "$RESTORE" == "true" ]]; then
   # Find last backup file
   : ${LAST_BACKUP:=$(aws s3 ls s3://$S3_BUCKET_NAME | awk -F " " '{print $4}' | grep ^$BACKUP_NAME | sort -r | head -n1)}
@@ -18,7 +15,7 @@ if [[ "$RESTORE" == "true" ]]; then
   echo "\$databases['default']['default']['password'] = '$DBPASS';" >> /var/www/html/sites/default/settings.php
 
   if [[ "$DBRESTORE" == "true" ]]; then
-    mysql -udrupal -p$DBPASS drupal < /var/www/html/.db.sql
+    mysql -u $DBUSER -p$DBPASS $DBNAME < $DBFILE
   fi
 
 else
