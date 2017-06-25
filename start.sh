@@ -12,7 +12,11 @@ if [[ "$RESTORE" == "true" ]]; then
   
   # Extract backup
   tar xzf $LAST_BACKUP $RESTORE_TAR_OPTION
-  echo "\$databases['default']['default']['password'] = '$DBPASS';" >> /var/www/html/sites/default/settings.php
+
+  settings="/var/www/html/sites/default/settings.php"
+  if [[ -f "$settings" ]]; then
+    echo "\$databases['default']['default']['password'] = '$DBPASS';" >> "$settings"
+  fi
 
   if [[ "$DBRESTORE" == "true" ]]; then
     mysql -u $DBUSER -p$DBPASS $DBNAME < $DBFILE
