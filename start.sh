@@ -14,7 +14,7 @@ if [[ "$RESTORE" == "true" ]]; then
   tar xzf $LAST_BACKUP $RESTORE_TAR_OPTION
 
   settings="/var/www/html/sites/default/settings.php"
-  if [[ -f "$settings" ]]; then
+  if [ -f "$settings" ] && [ -v $DBPASS ]; then
     echo "\$databases['default']['default']['password'] = '$DBPASS';" >> "$settings"
   fi
 
