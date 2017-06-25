@@ -14,7 +14,7 @@ if [[ "$RESTORE" == "true" ]]; then
   tar xzf $LAST_BACKUP $RESTORE_TAR_OPTION
 
   settings="/var/www/html/sites/default/settings.php"
-  if [ -f "$settings" ] && [ -v $DBPASS ]; then
+  if [[ -f "$settings" ]] && [[ -n "$DBPASS" ]]; then
     echo "\$databases['default']['default']['password'] = '$DBPASS';" >> "$settings"
   fi
 
@@ -36,7 +36,7 @@ else
   echo "start tar with opts $BACKUP_TAR_OPTION"
   tar czf $tarball $BACKUP_PATHS $BACKUP_TAR_OPTION
   # Clean db file
-  if [ "$DBDUMP" == "true" ] && [ "$DBFILE" == "/var/www/html/.db.sql" ]; then
+  if [[ "$DBDUMP" == "true" ]] && [[ "$DBFILE" == "/var/www/html/.db.sql" ]]; then
     rm '/var/www/html/.db.sql'
   fi
 
