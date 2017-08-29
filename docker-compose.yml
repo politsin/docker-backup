@@ -14,6 +14,7 @@ s3-dockup :
     - DBDUMP=true
     - DBDUMPENGINE=drush
     - DBSKIP=--structure-tables-list=cache,cache_*,cachetags,search_*,watchdog,history,sessions
+    - DB=mysql
     - DBHOST=
     - DBNAME=drupal
     - DBUSER=drupal
