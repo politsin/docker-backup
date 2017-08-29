@@ -3,6 +3,8 @@ sudo: required
 services:
   - docker
 
+language: ruby
+
 env:
   global:
     - COMMIT=${TRAVIS_COMMIT::8}
