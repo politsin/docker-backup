@@ -14,10 +14,10 @@ script:
 
 after_success:
   - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-  - export REPO=$DOCKER_USER/docker-backup
+  - export REPO=synst/s3-dockup
   - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
   - docker build -f Dockerfile -t $REPO .
   - docker tag $REPO $REPO:$TAG
   - docker tag $REPO $REPO:$VERSION
-  - docker tag $REPO $REPO:$VERSION-travis-$TRAVIS_BUILD_NUMBER
+  - docker tag $REPO $REPO:$VERSION.$TRAVIS_BUILD_NUMBER
   - docker push $REPO
