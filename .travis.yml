@@ -3,8 +3,6 @@ language: python
 services:
   - docker
 
-language: go
-
 env:
   global:
     - COMMIT=${TRAVIS_COMMIT::8}
