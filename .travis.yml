@@ -1,4 +1,6 @@
 language: python
+python:
+    - '2.7'
 
 services:
   - docker
@@ -6,6 +8,7 @@ services:
 env:
   global:
     - COMMIT=${TRAVIS_COMMIT::8}
+
 script:
   - python build.py
 
