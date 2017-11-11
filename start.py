@@ -7,6 +7,8 @@ import time
 import string
 import random
 import subprocess
+import urllib2
+import json
 
 # Vars
 siteroot = "/var/www/html"
@@ -34,24 +36,50 @@ dbrestore = os.getenv('DBRESTORE', 'mysql') #['', 'mysql', 'postgre']
 
 # AWS Settings
 aws_region = os.getenv('AWS_DEFAULT_REGION', 'eu-west-1')
-bucket = os.getenv('S3_BUCKET_NAME', '') 
+bucket = os.getenv('S3_BUCKET_NAME', '')
 
-def logMsg(msg):
-    print (msg)
-    return;
+# Message
+mattermost = os.getenv('MATTERMOST', '')
 
+
+# Send Message
 def sendLog(status, msg):
+    # mattermost
+    if len(mattermost) > 10:
+        post_to_mattermost(mattermost, status, msg)
     print (msg)
     return;
 
+# Exec Status & Log
 def execLog(result, ok, fail):
     if result == 0:
-        logMsg (ok)
+        print (ok)
     else:
-        logMsg (fail)
-        sendLog ('FAIL', '@all ' + fail)
+        print (fail)
+        sendLog ('FAIL', '@all ' + backup_name + ' ' + fail)
         sys.exit()
     return;
+
+def emoji(notificationtype):
+    return {
+        "FAIL": ":fire:",
+        "OK": ":sunny:",
+    }.get(notificationtype, "")
+
+def encode_special_characters(text):
+    text = text.replace("%", "%25")
+    text = text.replace("&", "%26")
+    return text
+
+def post_to_mattermost(webhook, status, msg):
+    data = {}
+    data['text'] = emoji(status) + encode_special_characters(msg)
+    req = urllib2.Request(webhook)
+    req.add_header('Content-Type','application/json')
+    payload = json.dumps(data)
+    response = urllib2.urlopen(req, payload)
+    if response.getcode() is not 200:
+        print 'Posting to mattermost failed'
 
 def backup():
     print ("Backup")
