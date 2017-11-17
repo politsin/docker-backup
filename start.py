@@ -15,10 +15,11 @@ siteroot = "/var/www/html"
 settings = siteroot + "/sites/default/settings.php"
 dbskip = "--structure-tables-list=cache,cache_*,cachetags,search_*,watchdog,history,sessions"
 tar_opts = "--exclude=/var/www/html/cmd-* --exclude=/var/www/html/adminer.php --exclude=.git"
-pass8 = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8));
+pass8x = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8));
 tar_opts_restore = ""
 
 # Backup
+tz = os.getenv('TIMEZONE', '') # 'Europe/Moscow'
 restore = os.getenv('RESTORE', 0) #['', 'restore']
 backup_name = os.getenv('BACKUP_NAME', '')
 backup_path = os.getenv('BACKUP_PATHS', '/var/www/html')
@@ -26,10 +27,10 @@ tar_options = os.getenv('BACKUP_TAR_OPTION', tar_opts)
 
 # DB Settings:
 dbfile = os.getenv('DBFILE', siteroot + "/.db.sql")
-dbdump = os.getenv('DBDUMP', 'drush') # opts: ['', 'drush', 'mysql', 'postgre']
+dbdump = os.getenv('DBDUMP', '') # opts: ['', 'drush', 'mysql', 'postgre']
 dbname = os.getenv('DBNAME', 'drupal')
 dbuser = os.getenv('DBUSER', 'drupal')
-dbpass = os.getenv('DBPASS', pass8)
+dbpass = os.getenv('DBPASS', pass8x)
 dbhost = os.getenv('DBHOST', 'localhost')
 dbskip = os.getenv('DBSKIP', '')
 dbrestore = os.getenv('DBRESTORE', 'mysql') #['', 'mysql', 'postgre']
@@ -46,7 +47,7 @@ mattermost = os.getenv('MATTERMOST', '')
 def sendLog(status, msg):
     # mattermost
     if len(mattermost) > 10:
-        post_to_mattermost(mattermost, status, msg)
+        post_to_mattermost(mattermost, status, backup_name, msg)
     print (msg)
     return;
 
@@ -71,9 +72,9 @@ def encode_special_characters(text):
     text = text.replace("&", "%26")
     return text
 
-def post_to_mattermost(webhook, status, msg):
+def post_to_mattermost(webhook, status, backup_name, msg):
     data = {}
-    data['text'] = emoji(status) + encode_special_characters(msg)
+    data['text'] = emoji(status) + " [" + backup_name + "] " + encode_special_characters(msg)
     req = urllib2.Request(webhook)
     req.add_header('Content-Type','application/json')
     payload = json.dumps(data)
@@ -84,8 +85,12 @@ def post_to_mattermost(webhook, status, msg):
 def backup():
     print ("Backup")
 
+    if len(tz) > 4:
+        os.system('echo "%s" > /etc/timezone' % (tz))
+        os.system('cp /usr/share/zoneinfo/%s /etc/localtime' % (tz))
+
     if len(dbdump) > 4:
-        # Create drupal-DBdump
+        # Create drush drupal-DBdump
         if dbdump == 'drush':
             drushdump = "/usr/local/bin/drush sql-dump --root=%s" % (siteroot)
             backup = os.system("%s --result-file=%s %s" % (drushdump, dbfile, dbskip))
@@ -102,14 +107,14 @@ def backup():
         os.system("chown www-data:www-data %s" % (dbfile))
 
     # Create tarball
-    backup_suffix = time.strftime(".%Y-%m-%d-%H-%M-%S.tar.gz", time.gmtime())
+    backup_suffix = time.strftime(".%Y-%m-%d-%H-%M-%S.tar.gz", time.localtime())
     tarball = backup_name + backup_suffix
-    logMsg ('start tar with opts %s' % (tar_options))
+    #logMsg ('start tar with opts %s' % (tar_options))
     tar = os.system("tar czf %s %s %s" % (tarball, backup_path, tar_options))
     execLog(tar, 'OK: tar files', 'ERROR: Failed to create tar files')
 
     # Clean db file.
-    if dbdump == 'drupal' and dbfile == "/var/www/html/.db.sql":
+    if dbdump == 'drush' and dbfile == "/var/www/html/.db.sql":
         rmdump = os.system("rm -f '/var/www/html/.db.sql'") # this file, not %s dbfile
         execLog(rmdump, 'OK: rm %s' % (dbfile), 'ERROR: Failed to rm %s' % (dbfile))
 
@@ -137,7 +142,7 @@ def restore():
     execLog(bcpfail, 'Last Backup Name: %s' % (backup), 'ERROR: Failed to get Last Backup Name')
 
     # Download from AWS S3
-    s3 = os.system("aws s3 cp --region %s s3://%s/%s %s" % (aws_region, bucket, backup, backup))
+    s3 = os.system("aws s3 cp s3://%s/%s %s" % (bucket, backup, backup))
     execLog(s3, 'OK: Download Last Backup from AWS', 'ERROR: Failed to download last backup from AWS')
 
     # Un TAR
