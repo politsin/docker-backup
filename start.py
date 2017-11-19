@@ -20,7 +20,7 @@ tar_opts_restore = ""
 
 # Backup
 tz = os.getenv('TIMEZONE', '') # 'Europe/Moscow'
-restore = os.getenv('RESTORE', 0) #['', 'restore']
+restoreflag = os.getenv('RESTORE', 0) #['', 'restore']
 backup_name = os.getenv('BACKUP_NAME', '')
 backup_path = os.getenv('BACKUP_PATHS', '/var/www/html')
 tar_options = os.getenv('BACKUP_TAR_OPTION', tar_opts)
@@ -33,7 +33,7 @@ dbuser = os.getenv('DBUSER', 'drupal')
 dbpass = os.getenv('DBPASS', pass8x)
 dbhost = os.getenv('DBHOST', 'localhost')
 dbskip = os.getenv('DBSKIP', '')
-dbrestore = os.getenv('DBRESTORE', 'mysql') #['', 'mysql', 'postgre']
+dbrestore = os.getenv('DBRESTORE', '') #['', 'mysql', 'postgre']
 
 # AWS Settings
 aws_region = os.getenv('AWS_DEFAULT_REGION', 'eu-west-1')
@@ -171,7 +171,7 @@ def restore():
     sendLog ('OK', 'Restore Completed')
     return;
 
-if restore == 'restore':
+if restoreflag == 'restore':
     restore()
 else:
     backup()
