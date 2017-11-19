@@ -64,7 +64,9 @@ def execLog(result, ok, fail):
 def emoji(notificationtype):
     return {
         "FAIL": ":fire:",
-        "OK": ":sunny:",
+        "OK": ":four_leaf_clover:",
+        "START BCP": ":rocket:",
+        "START RST": ":cyclone:",
     }.get(notificationtype, "")
 
 def encode_special_characters(text):
@@ -83,6 +85,8 @@ def post_to_mattermost(webhook, status, backup_name, msg):
         print 'Posting to mattermost failed'
 
 def backup():
+    # Say 'Start'
+    sendLog ('START BCP', 'Backup start')
     print ("Backup")
 
     if len(tz) > 4:
@@ -131,6 +135,8 @@ def backup():
     return;
 
 def restore():
+    # Say 'Start'
+    sendLog ('START RST', 'Restore start')
     print ("Restore")
 
     # Find Last Backup Name (Name + exec->trim->explode->arr[1])
