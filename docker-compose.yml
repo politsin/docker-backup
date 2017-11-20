@@ -3,7 +3,7 @@ s3-dockup :
   container_name: s3-dockup-example
   hostname: s3-dockup-example
   environment:
-    - TZ=Europe/Moscow
+    - TIMEZONE=Europe/Moscow
     - BACKUP_NAME=bcp-d-000-dockup-example
     - BACKUP_PATHS=/var/www /var/lib/mysql
     - S3_BUCKET_NAME=
@@ -11,15 +11,18 @@ s3-dockup :
     - AWS_ACCESS_KEY_ID=
     - AWS_SECRET_ACCESS_KEY=
     - BACKUP_TAR_OPTION=
-    - DBDUMP=true
-    - DBDUMPENGINE=drush
+    - DBDUMP=drush
     - DBSKIP=--structure-tables-list=cache,cache_*,cachetags,search_*,watchdog,history,sessions
-    - DB=mysql
-    - DBHOST=
+    #- DBHOST=localhost
     - DBNAME=drupal
     - DBUSER=drupal
+    - DBPASS=drupal
     - DBFILE=/var/www/html/.db.sql
-    # $RESTORE=false
+    #- MATTERMOST=
+    #- RESTORE=restore
+    #- DBRESTORE=mysql
+    #- DBRESTORE=mysql
+    #- BACKUP_TAR_OPTION_RESTORE=
   volumes:
     - "/opt/sites/0-default/www-home:/var/www:rw"
     - "/opt/sites/0-default/db:/var/lib/mysql:ro"

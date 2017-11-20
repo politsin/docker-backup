@@ -9,21 +9,20 @@ import random
 import subprocess
 import urllib2
 import json
+import subprocess
 
 # Vars
 siteroot = "/var/www/html"
 settings = siteroot + "/sites/default/settings.php"
-dbskip = "--structure-tables-list=cache,cache_*,cachetags,search_*,watchdog,history,sessions"
-tar_opts = "--exclude=/var/www/html/cmd-* --exclude=/var/www/html/adminer.php --exclude=.git"
 pass8x = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8));
-tar_opts_restore = ""
 
 # Backup
 tz = os.getenv('TIMEZONE', '') # 'Europe/Moscow'
-restoreflag = os.getenv('RESTORE', 0) #['', 'restore']
 backup_name = os.getenv('BACKUP_NAME', '')
 backup_path = os.getenv('BACKUP_PATHS', '/var/www/html')
-tar_options = os.getenv('BACKUP_TAR_OPTION', tar_opts)
+tar_options = os.getenv('BACKUP_TAR_OPTION', '')
+restoreflag = os.getenv('RESTORE', 0) #['', 'restore']
+tar_opts_restore = os.getenv('BACKUP_TAR_OPTION_RESTORE', '')
 
 # DB Settings:
 dbfile = os.getenv('DBFILE', siteroot + "/.db.sql")
@@ -113,8 +112,9 @@ def backup():
     # Create tarball
     backup_suffix = time.strftime(".%Y-%m-%d-%H-%M-%S.tar.gz", time.localtime())
     tarball = backup_name + backup_suffix
-    #logMsg ('start tar with opts %s' % (tar_options))
     tar = os.system("tar czf %s %s %s" % (tarball, backup_path, tar_options))
+    if tar == 256:
+        tar = 0 # Tar exit code=1 (high byte of a 16-bit value) IS OK `Some files differ'
     execLog(tar, 'OK: tar files', 'ERROR: Failed to create tar files')
 
     # Clean db file.
