@@ -37,6 +37,7 @@ dbrestore = os.getenv('DBRESTORE', '') #['', 'mysql', 'postgre']
 # AWS Settings
 aws_region = os.getenv('AWS_DEFAULT_REGION', 'eu-west-1')
 bucket = os.getenv('S3_BUCKET_NAME', '')
+params = os.getenv('PARAMS', '')
 
 # Message
 mattermost = os.getenv('MATTERMOST', '')
@@ -127,7 +128,7 @@ def backup():
         execLog(rmdump, 'OK: rm %s' % (dbfile), 'ERROR: Failed to rm %s' % (dbfile))
 
     # Upload the backup to S3 with timestamp
-    s3 = os.system("aws s3 --region %s cp %s s3://%s/%s" % (aws_region, tarball, bucket, tarball))
+    s3 = os.system("aws s3 --region %s cp %s s3://%s/%s %s" % (aws_region, tarball, bucket, tarball, params))
     execLog(s3, 'OK: s3 upload', 'ERROR: Failed to upload backup to AWS')
 
     # Remove old files.
@@ -152,7 +153,7 @@ def restore():
     execLog(bcpfail, 'Last Backup Name: %s' % (backup), 'ERROR: Failed to get Last Backup Name')
 
     # Download from AWS S3
-    s3 = os.system("aws s3 cp s3://%s/%s %s" % (bucket, backup, backup))
+    s3 = os.system("aws s3 cp s3://%s/%s %s %s" % (bucket, backup, backup, params))
     execLog(s3, 'OK: Download Last Backup from AWS', 'ERROR: Failed to download last backup from AWS')
 
     # Un TAR
