@@ -37,7 +37,7 @@ dbrestore = os.getenv('DBRESTORE', '') #['', 'mysql', 'postgre']
 # AWS Settings
 aws_region = os.getenv('AWS_DEFAULT_REGION', 'eu-west-1')
 bucket = os.getenv('S3_BUCKET_NAME', '')
-params = os.getenv('PARAMS', '')
+params = os.getenv('AWS_CLI_PARAMS', '')
 
 # Message
 mattermost = os.getenv('MATTERMOST', '')
