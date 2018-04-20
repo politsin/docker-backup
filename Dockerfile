@@ -31,7 +31,7 @@ RUN apt-get update && \
     rm -rf /usr/share/man/??_*
 
 #DRUSH:::
-RUN wget https://s3.amazonaws.com/files.drush.org/drush.phar -q -O drush \
+RUN wget https://github.com/drush-ops/drush/releases/download/8.1.16/drush.phar -q -O drush \
     && php drush core-status \
     && chmod +x drush \
     && mv drush /usr/local/bin/drush
