@@ -8,16 +8,11 @@ services:
 env:
   global:
     - VERSION=1.4
+    - REPO=synst/s3-dockup
 
 script:
   - python build.py
 
 after_success:
   - docker login -u $DOCKER_USER -p $DOCKER_PASS
-  - export REPO=synst/s3-dockup
-  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
-  - docker build -f Dockerfile -t $REPO .
-  - docker tag $REPO $REPO:$TAG
-  - docker tag $REPO $REPO:$VERSION
-  - docker tag $REPO $REPO:$VERSION.$TRAVIS_BUILD_NUMBER
   - docker push $REPO
