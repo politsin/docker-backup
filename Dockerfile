@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 MAINTAINER Synapse <mail@synapse-studio.ru>
 
 # Surpress Upstart errors/warning
@@ -10,12 +10,12 @@ ENV DEBIAN_FRONTEND noninteractive
 #APT-GET:::
 RUN apt-get update && \
     apt-get install -y software-properties-common apt-utils curl wget && \
-    apt-get install -y php7.0 \
-                       php7.0-fpm \
-                       php7.0-dev \
-                       php7.0-cgi \
-                       php7.0-mysql \
-                       php7.0-pgsql \
+    apt-get install -y php7.2 \
+                       php7.2-fpm \
+                       php7.2-dev \
+                       php7.2-cgi \
+                       php7.2-mysql \
+                       php7.2-pgsql \
                        php-sqlite3 \
                        python-pip \
                        mysql-client \
@@ -31,7 +31,7 @@ RUN apt-get update && \
     rm -rf /usr/share/man/??_*
 
 #DRUSH:::
-RUN wget https://github.com/drush-ops/drush/releases/download/8.1.16/drush.phar -q -O drush \
+RUN wget https://github.com/drush-ops/drush/releases/download/8.3.0/drush.phar -q -O drush \
     && php drush core-status \
     && chmod +x drush \
     && mv drush /usr/local/bin/drush
