@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 MAINTAINER Synapse <mail@synapse-studio.ru>
 
 # Surpress Upstart errors/warning
@@ -7,17 +7,18 @@ RUN ln -sf /bin/true /sbin/initctl
 # Let the conatiner know that there is no tty
 ENV DEBIAN_FRONTEND noninteractive
 
-#APT-GET:::
 RUN apt-get update && \
-    apt-get install -y software-properties-common apt-utils curl wget && \
-    apt-get install -y php7.2 \
-                       php7.2-fpm \
-                       php7.2-dev \
-                       php7.2-cgi \
-                       php7.2-mysql \
-                       php7.2-pgsql \
+    apt-get install -y software-properties-common apt-utils && \
+    LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php && \
+    apt-get update && \
+    apt-get install -y php7.4 \
+                       php7.4-fpm \
+                       php7.4-dev \
+                       php7.4-cgi \
+                       php7.4-mysql \
+                       php7.4-pgsql \
                        php-sqlite3 \
-                       python-pip \
+                       python3-pip \
                        mysql-client \
                        postgresql-client && \
     apt-get remove --purge -y software-properties-common && \
@@ -35,6 +36,11 @@ RUN wget https://github.com/drush-ops/drush/releases/download/8.3.0/drush.phar -
     && php drush core-status \
     && chmod +x drush \
     && mv drush /usr/local/bin/drush
+
+#Composer:::
+RUN wget https://getcomposer.org/installer -q -O composer-setup.php \
+    && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
+    && chmod +x /usr/local/bin/composer
 
 #AWS:::
 RUN pip install awscli
