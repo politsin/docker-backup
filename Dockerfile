@@ -44,7 +44,7 @@ RUN wget https://getcomposer.org/installer -q -O composer-setup.php \
     && chmod +x /usr/local/bin/composer
 
 #AWS:::
-RUN pip install awscli
+RUN pip3 install awscli
 
 #COPY script & config:::
 COPY start.py /start.py
