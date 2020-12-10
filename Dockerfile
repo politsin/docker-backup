@@ -18,6 +18,7 @@ RUN apt-get update && \
                        php7.4-mysql \
                        php7.4-pgsql \
                        php-sqlite3 \
+                       wget \
                        python3-pip \
                        mysql-client \
                        postgresql-client && \
