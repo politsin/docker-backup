@@ -70,15 +70,15 @@ RUN wget https://getcomposer.org/installer -q -O composer-setup.php \
     && chmod +x /usr/local/bin/composer
 
 #COPY script & config:::
-RUN mkdir -p /var/www/src/Command
-COPY console/.env /var/www/.env
-COPY console/console.php /var/www/console.php
-COPY console/composer.json /var/www/composer.json
-COPY console/src/Command/S3Backup.php /var/www/src/Command/S3Backup.php
+RUN mkdir -p /opt/console/src/Command
+COPY console/.env /opt/console/.env
+COPY console/console.php /opt/console/console.php
+COPY console/composer.json /opt/console/composer.json
+COPY console/src/Command/S3Backup.php /opt/console/src/Command/S3Backup.php
 
 RUN cd /var/www/ && composer install
 
 #Fix ownership
 RUN chmod 755 /var/www/console.php
 
-ENTRYPOINT ["/usr/bin/php", "/var/www/console.php"]
+ENTRYPOINT ["/usr/bin/php", "/opt/console/console.php"]
