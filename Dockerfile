@@ -7,34 +7,60 @@ RUN ln -sf /bin/true /sbin/initctl
 # Let the conatiner know that there is no tty
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get update && \
-    apt-get install -y software-properties-common apt-utils && \
-    LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php && \
-    apt-get update && \
-    apt-get install -y php7.4 \
-                       php7.4-fpm \
-                       php7.4-dev \
-                       php7.4-cgi \
-                       php7.4-mysql \
-                       php7.4-pgsql \
-                       php-sqlite3 \
-                       wget \
-                       python3-pip \
-                       mysql-client \
-                       postgresql-client && \
-    apt-get remove --purge -y software-properties-common && \
-    apt-get autoremove -y && \
-    apt-get clean && \
-    apt-get autoclean && \
+# APT install:::
+RUN apt update && \
+    apt install -y software-properties-common \
+                   dnsutils \
+                   net-tools \
+                   inetutils-ping && \
+    apt install -y mc \
+                   git \
+                   nnn \
+                   zip \
+                   zsh \
+                   curl \
+                   htop \
+                   nano \
+                   ncdu \
+                   sass \
+                   unzip && \
+    apt install -y sqlite3 \
+                   mysql-client \
+                   postgresql-client &&  \
+    apt install -y awscli \
+                   python3-pip && \
+    apt autoremove -y && \
+    apt clean && \
+    apt autoclean && \
     mkdir /var/run/sshd && \
     echo -n > /var/lib/apt/extended_states && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /usr/share/man/?? && \
     rm -rf /usr/share/man/??_*
 
+#PHP:::
+RUN apt update && \
+    LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php && \
+    apt update && \
+    apt install -y php8.1 \
+                   php8.1-fpm \
+                   php8.1-zip \
+                   php8.1-curl \
+                   php8.1-mysql \
+                   php8.1-pgsql \
+                   php8.1-mbstring \
+                   php-json \
+                   php-ssh2 \
+                   php-sqlite3 && \
+    apt autoremove -y && \
+    apt clean && \
+    apt autoclean && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm -rf /usr/share/man/?? && \
+    rm -rf /usr/share/man/??_*
+
 #DRUSH:::
-RUN wget https://github.com/drush-ops/drush/releases/download/8.3.0/drush.phar -q -O drush \
-    && php drush core-status \
+RUN wget https://github.com/drush-ops/drush-launcher/releases/latest/download/drush.phar -q -O drush \
     && chmod +x drush \
     && mv drush /usr/local/bin/drush
 
@@ -43,15 +69,10 @@ RUN wget https://getcomposer.org/installer -q -O composer-setup.php \
     && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
     && chmod +x /usr/local/bin/composer
 
-#AWS:::
-RUN pip3 install awscli
-
 #COPY script & config:::
-COPY start.py /start.py
+COPY config/start.php /start.php
 
 #Fix ownership
-RUN chmod 755 /start.py && \
-    mkdir /run/php && \
-    chown -R www-data.www-data /run/php
+RUN chmod 755 /start.php
 
-ENTRYPOINT ["/start.py"]
+ENTRYPOINT ["/start.php"]
