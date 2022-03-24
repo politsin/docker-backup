@@ -26,5 +26,5 @@ services:
       #- DBRESTORE=mysql
       #- BACKUP_TAR_OPTION_RESTORE=
     volumes:
-      - "./console/console.php:/var/www/console.php"
-      - "./console/.env:/var/www/.env"
+      - "./console/console.php:/opt/console/console.php"
+      - "./console/.env:/opt/console/.env"
