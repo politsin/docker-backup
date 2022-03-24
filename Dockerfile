@@ -70,9 +70,9 @@ RUN wget https://getcomposer.org/installer -q -O composer-setup.php \
     && chmod +x /usr/local/bin/composer
 
 #COPY script & config:::
-COPY console/start.php /var/www/console.php
+COPY console/console.php /var/www/console.php
 
 #Fix ownership
-RUN chmod 755 /console.php
+RUN chmod 755 /var/www/console.php
 
 ENTRYPOINT ["/usr/bin/php", "/var/www/console.php"]
