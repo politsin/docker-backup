@@ -76,7 +76,7 @@ COPY console/console.php /opt/console/console.php
 COPY console/composer.json /opt/console/composer.json
 COPY console/src/Command/S3Backup.php /opt/console/src/Command/S3Backup.php
 
-RUN cd /var/www/ && composer install
+RUN cd /opt/console && composer install
 
 #Fix ownership
 RUN chmod 755 /var/www/console.php
