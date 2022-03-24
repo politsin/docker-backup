@@ -44,11 +44,14 @@ RUN apt update && \
     LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php && \
     apt update && \
     apt install -y php8.1 \
+                   php8.1-xml \
+                   php8.1-dom \
                    php8.1-zip \
                    php8.1-curl \
                    php8.1-mysql \
                    php8.1-pgsql \
                    php8.1-mbstring \
+                   php-xml \
                    php-json \
                    php-ssh2 \
                    php-sqlite3 && \
