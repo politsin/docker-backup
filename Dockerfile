@@ -79,6 +79,6 @@ COPY console/src/Command/S3Backup.php /opt/console/src/Command/S3Backup.php
 RUN cd /opt/console && composer install
 
 #Fix ownership
-RUN chmod 755 /var/www/console.php
+RUN chmod 755 /opt/console/console.php
 
 ENTRYPOINT ["/usr/bin/php", "/opt/console/console.php"]
