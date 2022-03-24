@@ -23,6 +23,7 @@ RUN apt update && \
                    nano \
                    ncdu \
                    sass \
+                   wget \
                    unzip && \
     apt install -y sqlite3 \
                    mysql-client \
