@@ -1,28 +1,30 @@
-s3-dockup :
-  image: synst/s3-dockup
-  container_name: s3-dockup
-  hostname: s3-dockup
-  environment:
-    - TIMEZONE=Europe/Moscow
-    - BACKUP_NAME=bcp-d-000-dockup-example
-    - BACKUP_PATHS=/var/www/html
-    - S3_BUCKET_NAME=
-    - AWS_DEFAULT_REGION=
-    - AWS_ACCESS_KEY_ID=
-    - AWS_SECRET_ACCESS_KEY=
-    - BACKUP_TAR_OPTION=--exclude=/var/www/html/sites/default/files/translations
-    - DBDUMP=drush
-    - DBSKIP=--structure-tables-list=cache,cache_*,cachetags,field_deleted_*,flood,history,search_*,sessions,watchdog,webprofiler
-    #- DBHOST=localhost
-    - DBNAME=drupal
-    - DBUSER=drupal
-    - DBPASS=drupal
-    - DBFILE=/var/www/html/.db.sql
-    #- MATTERMOST=
-    #- RESTORE=restore
-    #- DBRESTORE=mysql
-    #- DBRESTORE=mysql
-    #- BACKUP_TAR_OPTION_RESTORE=
-  volumes:
-    - "./console/console.php:/var/www/console.php"
-    - "./console/.env:/var/www/.env"
+version: "3"
+services:
+  dockup:
+    image: s3dockup
+    container_name: dockup
+    hostname: dockup
+    environment:
+      - TIMEZONE=Europe/Moscow
+      - BACKUP_NAME=bcp-d-000-dockup-example
+      - BACKUP_PATHS=/var/www/html
+      - S3_BUCKET_NAME=
+      - AWS_DEFAULT_REGION=
+      - AWS_ACCESS_KEY_ID=
+      - AWS_SECRET_ACCESS_KEY=
+      - BACKUP_TAR_OPTION=--exclude=/var/www/html/sites/default/files/translations
+      - DBDUMP=drush
+      - DBSKIP=--structure-tables-list=cache,cache_*,cachetags,field_deleted_*,flood,history,search_*,sessions,watchdog,webprofiler
+      #- DBHOST=localhost
+      - DBNAME=drupal
+      - DBUSER=drupal
+      - DBPASS=drupal
+      - DBFILE=/var/www/html/.db.sql
+      #- MATTERMOST=
+      #- RESTORE=restore
+      #- DBRESTORE=mysql
+      #- DBRESTORE=mysql
+      #- BACKUP_TAR_OPTION_RESTORE=
+    volumes:
+      - "./console/console.php:/var/www/console.php"
+      - "./console/.env:/var/www/.env"
