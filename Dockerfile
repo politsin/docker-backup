@@ -70,6 +70,8 @@ RUN wget https://getcomposer.org/installer -q -O composer-setup.php \
 
 #COPY script & config:::
 COPY console/console.php /var/www/console.php
+COPY console/composer.json /var/www/composer.json
+RUN cd /var/www/ && composer install
 
 #Fix ownership
 RUN chmod 755 /var/www/console.php
