@@ -1,7 +1,7 @@
 s3-dockup :
   image: synst/s3-dockup
-  container_name: s3-dockup-example
-  hostname: s3-dockup-example
+  container_name: s3-dockup
+  hostname: s3-dockup
   environment:
     - TIMEZONE=Europe/Moscow
     - BACKUP_NAME=bcp-d-000-dockup-example
@@ -24,6 +24,5 @@ s3-dockup :
     #- DBRESTORE=mysql
     #- BACKUP_TAR_OPTION_RESTORE=
   volumes:
-    - "/opt/sites/0-default/www-home:/var/www:rw"
-    - "/opt/sites/0-default/db:/var/lib/mysql:ro"
-    - "/opt/sites/0-default/run/mysqld:/var/run/mysqld:ro"
+    - "./console/console.php:/var/www/console.php"
+    - "./console/.env:/var/www/.env"
