@@ -18,8 +18,7 @@ class ArchiveStep extends StepBase {
     parent::__construct($command);
 
     $this->command->tarball = $this->getTarballName(
-      $_ENV['APP_ID'] ?? 0,
-      $_ENV['APP_NAME'] ?? 'dockup-example'
+      $_ENV['BACKUP_NAME'] ?? 'bcp-d-0-dockup-example'
     );
   }
 
@@ -44,9 +43,9 @@ class ArchiveStep extends StepBase {
   /**
    * Get archive name.
    */
-  private function getTarballName(int $appId, string $appName) : string {
+  private function getTarballName(string $backup_name) : string {
     return sprintf(
-      'bcp-d-%d-%s.%s.tar.gz', $appId, $appName, date(self::BACKUP_SUFFIX_MASK)
+      '%s.%s.tar.gz', $backup_name, date(self::BACKUP_SUFFIX_MASK)
     );
   }
 
