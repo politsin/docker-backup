@@ -74,10 +74,7 @@ RUN wget https://getcomposer.org/installer -q -O composer-setup.php \
 
 #COPY script & config:::
 RUN mkdir -p /opt/console/src/Command
-COPY console/.env /opt/console/.env
-COPY console/console.php /opt/console/console.php
-COPY console/composer.json /opt/console/composer.json
-COPY console/src/Command/S3Backup.php /opt/console/src/Command/S3Backup.php
+COPY console /opt/console
 
 RUN cd /opt/console && composer install
 
