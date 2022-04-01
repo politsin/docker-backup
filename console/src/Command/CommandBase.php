@@ -59,7 +59,7 @@ class CommandBase extends Command {
   /**
    * Common Sender.
    */
-  public function msg($message, $type = 'telega', $error = FALSE) {
+  public function msg($message, $type = 'console', $error = FALSE) {
     $result = FALSE;
     switch ($type) {
 
