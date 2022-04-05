@@ -3,8 +3,6 @@
 namespace App\Command;
 
 use Symfony\Component\Console\Command\Command;
-// use Bluerhinos\phpMQTT;
-// use Aws\S3\S3Client;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ConnectException;
@@ -59,7 +57,7 @@ class CommandBase extends Command {
   /**
    * Common Sender.
    */
-  public function msg($message, $type = 'console', $error = FALSE) {
+  public function msg($message, $type = 'telega', $error = FALSE) {
     $result = FALSE;
     switch ($type) {
 
@@ -74,9 +72,10 @@ class CommandBase extends Command {
         break;
 
       case 'telega':
-      default:
         $result = $this->telega($message);
         break;
+
+      default:
     }
 
     return $result;
@@ -88,7 +87,7 @@ class CommandBase extends Command {
   private function telega(string $message) {
     $client = new Client([
       'base_uri' => 'https://api.telegram.org',
-      'timeout'  => 0.1,
+      'timeout'  => 1,
     ]);
     $data = [
       'text' => $message,
