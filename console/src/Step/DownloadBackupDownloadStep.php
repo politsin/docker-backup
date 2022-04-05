@@ -14,7 +14,7 @@ class DownloadBackupDownloadStep extends StepBase {
    */
   public function run() : bool {
     $this->command->msg(sprintf(
-      'Step: Download "%s"', $this->command->backupFileName
+      'Step: Download "%s"', $this->command->backup_file_name
     ));
 
     if (empty($_ENV['AWS_ACCESS_KEY_ID']) || empty($_ENV['AWS_SECRET_ACCESS_KEY'])) {
@@ -23,18 +23,17 @@ class DownloadBackupDownloadStep extends StepBase {
     }
 
     $bucket = $_ENV['AWS_BUCKET'] ?? '';
-    $awsTarballPath = sprintf(
-      's3://%s/%s', $bucket, $this->command->backupFileName
+    $aws_tarball_path = sprintf(
+      's3://%s/%s', $bucket, $this->command->backup_file_name
     );
-    $this->command->localTarballPath = sprintf(
+    $this->command->local_tarball_path = sprintf(
       'backup_%s.tar.gz',
-      $this->command->backupName,
+      $this->command->app_key,
     );
-    $params = $_ENV['AWS_CLI_PARAMS'] ?? '';
 
     $cmd = sprintf(
       'aws s3 cp %s %s %s',
-      $awsTarballPath, $this->command->localTarballPath, $params
+      $aws_tarball_path, $this->command->local_tarball_path, $_ENV['AWS_CLI_PARAMS'] ?? ''
     );
     $result = $this->command->runProcess($cmd);
     $this->command->logExecute(

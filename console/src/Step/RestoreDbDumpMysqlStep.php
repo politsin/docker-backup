@@ -10,6 +10,7 @@ class RestoreDbDumpMysqlStep extends StepBase {
   const SITE_ROOT = '/var/www/html';
   const DUMP_FILE_NAME = '.db.sql';
   const DBUSER = 'drupal';
+  const DBPASS = 'drupal';
   const DBNAME = 'drupal';
 
   /**
@@ -19,7 +20,7 @@ class RestoreDbDumpMysqlStep extends StepBase {
     $this->command->msg(sprintf('Restore: "%s"', $this->command->dbrestore));
 
     $dbuser = $_ENV['DBUSER'] ?? self::DBUSER;
-    $dbpass = $_ENV['DBPASS'] ?? $this->command->crypt->rnd();
+    $dbpass = $_ENV['DBPASS'] ?? self::DBPASS;
     $dbname = $_ENV['DBNAME'] ?? self::DBNAME;
     $dbfile = $_ENV['DBFILE'] ?? implode('/', [self::SITE_ROOT, self::DUMP_FILE_NAME]);
 

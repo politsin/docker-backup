@@ -9,8 +9,9 @@ class CreateDbDumpMysqlStep extends StepBase {
 
   const SITE_ROOT = '/var/www/html';
   const DUMP_FILE_NAME = '.db.sql';
-  const DBUSER = 'drupal';
   const DBHOST = 'localhost';
+  const DBUSER = 'drupal';
+  const DBPASS = 'drupal';
   const DBNAME = 'drupal';
 
   /**
@@ -19,11 +20,11 @@ class CreateDbDumpMysqlStep extends StepBase {
   public function run() : bool {
     $this->command->msg(sprintf('Dump: "%s"', $this->command->dbdump));
 
-    $dbuser = $_ENV['DBUSER'] ?? self::DBUSER;
-    $dbpass = $_ENV['DBPASS'] ?? '';
-    $dbhost = $_ENV['DBHOST'] ?? self::DBHOST;
-    $dbname = $_ENV['DBNAME'] ?? self::DBNAME;
-    $dbfile = $_ENV['DBFILE'] ?? implode('/', [self::SITE_ROOT, self::DUMP_FILE_NAME]);
+    $dbuser = $_ENV['DBUSER'] ?: self::DBUSER;
+    $dbpass = $_ENV['DBPASS'] ?: self::DBPASS;
+    $dbname = $_ENV['DBNAME'] ?: self::DBNAME;
+    $dbhost = $_ENV['DBHOST'] ?: self::DBHOST;
+    $dbfile = $_ENV['DBFILE'] ?: implode('/', [self::SITE_ROOT, self::DUMP_FILE_NAME]);
 
     $cmd = sprintf(
       'mysqldump --column-statistics=0 -u%s -p%s -h%s %s > %s',

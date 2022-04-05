@@ -14,14 +14,12 @@ class DownloadBackupUntarStep extends StepBase {
    */
   public function run() : bool {
     $this->command->msg(sprintf(
-      'Step: Untar "%s"', $this->command->localTarballPath
+      'Step: Untar "%s"', $this->command->local_tarball_path
     ));
-
-    $tarOptsRestore = $_ENV['BACKUP_TAR_OPTION_RESTORE'] ?? '';
 
     $cmd = sprintf(
       'tar xzf %s -C / %s',
-      $this->command->localTarballPath, $tarOptsRestore
+      $this->command->local_tarball_path, $_ENV['BACKUP_TAR_OPTION_RESTORE'] ?? ''
     );
     $result = $this->command->runProcess($cmd);
     $this->command->logExecute(

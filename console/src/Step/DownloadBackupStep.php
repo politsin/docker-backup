@@ -15,7 +15,7 @@ class DownloadBackupStep extends StepBase {
   public function __construct(CommandInterface $command) {
     parent::__construct($command);
 
-    $this->command->backupName = $_ENV['APP_KEY'] ?? '';
+    $this->command->app_key = $_ENV['APP_KEY'] ?? '';
   }
 
   /**
