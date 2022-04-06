@@ -49,6 +49,8 @@ class S3Restore extends CommandBase implements CommandInterface {
     (new RestoreDbDumpStep($this))->run();
     (new RemoveDumpFileStep($this))->run();
 
+    $this->msg('Парам парам пам!');
+    
     return 0;
   }
 
