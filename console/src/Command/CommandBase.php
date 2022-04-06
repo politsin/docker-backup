@@ -62,11 +62,14 @@ class CommandBase extends Command {
   /**
    * Common Sender.
    */
-  public function msg($message, $type = 'console', $error = FALSE) {
+  public function msg($message) {
     $prefix = implode(' | ', [$_ENV['APP_KEY'], $_ENV['APP_TEMPLATE'], '']);
     $message = $prefix . $message;
+
+    $message_channel = $_ENV['MESSAGE_CHANNEL'] ?? 'console';
+
     $result = FALSE;
-    switch ($type) {
+    switch ($message_channel) {
 
       case 'console':
         $result = $this->io->text($message);
