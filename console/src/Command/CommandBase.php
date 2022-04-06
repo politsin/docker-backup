@@ -14,23 +14,28 @@ use Symfony\Component\Process\Process;
 class CommandBase extends Command {
 
   /**
+   * Exec.
+   */
+  public function getHelloMessage(string $emoji) : string {
+    $date_time_zone = new \DateTimeZone($_ENV['TIMEZONE']);
+    $date_time = new \DateTime('now', $date_time_zone);
+    return sprintf("Hello, %s [%s]", $emoji, $date_time->format('d.m.Y H:i:s'));
+  }
+
+  /**
    * Exec log.
    */
   public function logExecute(
     bool $success,
-    string $successMessage,
-    string $errorMessage
+    string $success_message,
+    string $error_message
   ) : void {
     if ($success) {
-      $this->msg(
-        sprintf('OK: "%s"', trim($successMessage))
-      );
+      return;
     }
-    else {
-      $this->msg(
-        sprintf('ERROR: "%s"', trim($errorMessage))
-      );
-    }
+    $this->msg(
+      sprintf('ERROR: "%s"', trim($error_message))
+    );
   }
 
   /**
@@ -57,7 +62,9 @@ class CommandBase extends Command {
   /**
    * Common Sender.
    */
-  public function msg($message, $type = 'telega', $error = FALSE) {
+  public function msg($message, $type = 'console', $error = FALSE) {
+    $prefix = implode(' | ', [$_ENV['APP_KEY'], $_ENV['APP_TEMPLATE'], '']);
+    $message = $prefix . $message;
     $result = FALSE;
     switch ($type) {
 

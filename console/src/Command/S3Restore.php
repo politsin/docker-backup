@@ -24,7 +24,7 @@ class S3Restore extends CommandBase implements CommandInterface {
     $this
       ->setName('s3restore')
       ->setDescription('restore data from s3')
-      ->setHelp('See Drupal\zapp_backup\accets\Backup');
+      ->setHelp('See Drupal\backup\Service\BackupRestore');
   }
 
   /**
@@ -38,7 +38,7 @@ class S3Restore extends CommandBase implements CommandInterface {
     $this->io = new SymfonyStyle($input, $output);
 
     $this->msg(
-      sprintf("Ni-hao, 🐼 [%s]", date('d.m.Y H:i:s'))
+      $this->getHelloMessage("🐼")
     );
 
     if (!(new DownloadBackupStep($this))->run()) {

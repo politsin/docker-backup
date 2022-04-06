@@ -22,7 +22,7 @@ class S3Backup extends CommandBase implements CommandInterface {
     $this
       ->setName('s3backup')
       ->setDescription('backup data to s3')
-      ->setHelp('See Drupal\zapp_backup\accets\Backup');
+      ->setHelp('See Drupal\backup\Service\Backup');
   }
 
   /**
@@ -36,13 +36,15 @@ class S3Backup extends CommandBase implements CommandInterface {
     $this->io = new SymfonyStyle($input, $output);
 
     $this->msg(
-      sprintf("Hello, 🐹 [%s]", date('d.m.Y H:i:s'))
+      $this->getHelloMessage("🐹")
     );
 
     (new SetTimezoneStep($this))->run();
     (new CreateDbDumpStep($this))->run();
     (new ArchiveStep($this))->run();
     (new RemoveDumpFileStep($this))->run();
+
+    $this->msg('Парам парам пам!');
 
     return 0;
   }
