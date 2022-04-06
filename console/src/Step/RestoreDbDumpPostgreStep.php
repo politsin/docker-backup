@@ -11,8 +11,6 @@ class RestoreDbDumpPostgreStep extends StepBase {
    * Run.
    */
   public function run() : bool {
-    $this->command->msg(sprintf('Restore: "%s"', $this->command->dbrestore));
-
     $this->command->logExecute(
       $result['success'] ?? FALSE,
       'Restore DB dump',

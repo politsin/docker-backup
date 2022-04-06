@@ -13,16 +13,12 @@ class ArchiveCreateTarballStep extends StepBase {
    * Run.
    */
   public function run() : bool {
-    $tarball = $this->command->tarball;
+    $backup_path = $_ENV['BACKUP_PATHS'] ?? self::BACKUP_PATHS;
+    $tar_options = $_ENV['BACKUP_TAR_OPTION'] ?? '';
 
-    $this->command->msg(
-      sprintf('Step: Create tarball "%s"', $tarball)
+    $cmd = sprintf(
+      'tar czf /var/www/%s %s %s', $this->command->tarball, $tar_options, $backup_path
     );
-
-    $backupPath = $_ENV['BACKUP_PATHS'] ?? self::BACKUP_PATHS;
-    $tarOptions = $_ENV['BACKUP_TAR_OPTION'] ?? '';
-
-    $cmd = sprintf('tar czf %s %s %s', '/var/www/' . $tarball, $tarOptions, $backupPath);
     $result = $this->command->runProcess($cmd);
     $this->command->logExecute(
       $result['success'] ?? FALSE,

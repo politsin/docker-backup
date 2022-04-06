@@ -13,13 +13,9 @@ class WriteSettingsWritePasswordStep extends StepBase {
    * Run.
    */
   public function run() : bool {
-    $this->command->msg('Step: Write password line');
-
-    $dbpass = $_ENV['DBPASS'] ?? '';
-
     $passwordLine = sprintf(
       '%c\$databases[\"default\"][\"default\"][\"password\"] = \"%s\";%c',
-      self::ASCII_NEW_LINE, $dbpass,  self::ASCII_NEW_LINE
+      self::ASCII_NEW_LINE, $_ENV['DBPASS'] ?? '',  self::ASCII_NEW_LINE
     );
     $cmd = sprintf(
       'echo "%s" >> %s', $passwordLine, $this->command->settingsFilePath

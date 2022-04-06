@@ -2,27 +2,17 @@
 
 namespace App\Step;
 
-use App\Command\CommandInterface;
-
 /**
  * Download backup.
  */
 class DownloadBackupStep extends StepBase {
 
   /**
-   * Construct.
-   */
-  public function __construct(CommandInterface $command) {
-    parent::__construct($command);
-
-    $this->command->app_key = $_ENV['APP_KEY'] ?? '';
-  }
-
-  /**
    * Run.
    */
   public function run() : bool {
     $this->command->msg('Step: Download backup');
+    $this->command->app_key = $_ENV['APP_KEY'] ?? '';
 
     if (!(new DownloadBackupDetermineNameStep($this->command))->run()) {
       return FALSE;

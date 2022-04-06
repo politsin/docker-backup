@@ -2,8 +2,6 @@
 
 namespace App\Step;
 
-use App\Command\CommandInterface;
-
 /**
  * Untar backup.
  */
@@ -13,10 +11,6 @@ class DownloadBackupUntarStep extends StepBase {
    * Run.
    */
   public function run() : bool {
-    $this->command->msg(sprintf(
-      'Step: Untar "%s"', $this->command->local_tarball_path
-    ));
-
     $cmd = sprintf(
       'tar xzf %s -C / %s',
       $this->command->local_tarball_path, $_ENV['BACKUP_TAR_OPTION_RESTORE'] ?? ''

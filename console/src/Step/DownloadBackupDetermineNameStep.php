@@ -2,8 +2,6 @@
 
 namespace App\Step;
 
-use App\Command\CommandInterface;
-
 /**
  * Determine backup name.
  */
@@ -13,11 +11,9 @@ class DownloadBackupDetermineNameStep extends StepBase {
    * Run.
    */
   public function run() : bool {
-    $this->command->msg('Step: Determine backup name');
-
     $bucket = $_ENV['AWS_BUCKET'] ?? '';
-    $app_key = $this->command->app_key;
     $params = $_ENV['AWS_CLI_PARAMS'] ?? '';
+    $app_key = $this->command->app_key;
 
     $cmd = sprintf(
       'aws s3 ls s3://%s %s | grep %s | sort -r | head -n1',

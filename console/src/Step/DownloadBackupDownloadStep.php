@@ -2,8 +2,6 @@
 
 namespace App\Step;
 
-use App\Command\CommandInterface;
-
 /**
  * Download backup.
  */
@@ -13,18 +11,13 @@ class DownloadBackupDownloadStep extends StepBase {
    * Run.
    */
   public function run() : bool {
-    $this->command->msg(sprintf(
-      'Step: Download "%s"', $this->command->backup_file_name
-    ));
-
     if (empty($_ENV['AWS_ACCESS_KEY_ID']) || empty($_ENV['AWS_SECRET_ACCESS_KEY'])) {
       $this->command->msg('Failed with empty key or secret');
       return FALSE;
     }
 
-    $bucket = $_ENV['AWS_BUCKET'] ?? '';
     $aws_tarball_path = sprintf(
-      's3://%s/%s', $bucket, $this->command->backup_file_name
+      's3://%s/%s', $_ENV['AWS_BUCKET'] ?? '', $this->command->backup_file_name
     );
     $this->command->local_tarball_path = sprintf(
       'backup_%s.tar.gz',

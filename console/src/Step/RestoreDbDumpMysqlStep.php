@@ -17,8 +17,6 @@ class RestoreDbDumpMysqlStep extends StepBase {
    * Run.
    */
   public function run() : bool {
-    $this->command->msg(sprintf('Restore: "%s"', $this->command->dbrestore));
-
     $dbuser = $_ENV['DBUSER'] ?? self::DBUSER;
     $dbpass = $_ENV['DBPASS'] ?? self::DBPASS;
     $dbname = $_ENV['DBNAME'] ?? self::DBNAME;

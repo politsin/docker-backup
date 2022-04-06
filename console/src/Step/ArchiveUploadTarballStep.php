@@ -14,12 +14,6 @@ class ArchiveUploadTarballStep extends StepBase {
    * Run.
    */
   public function run() : bool {
-    $tarball = $this->command->tarball;
-
-    $this->command->msg(
-      sprintf('Step: Upload tarball "%s"', $tarball)
-    );
-
     if (empty($_ENV['AWS_ACCESS_KEY_ID']) || empty($_ENV['AWS_SECRET_ACCESS_KEY'])) {
       $this->command->msg('Failed with empty key or secret');
       return FALSE;
@@ -27,10 +21,10 @@ class ArchiveUploadTarballStep extends StepBase {
 
     $localTarballPath = implode('/', [
       $_ENV['CONSOLE_PATHS'] ?? self::CONSOLE_PATHS,
-      $tarball,
+      $this->command->tarball,
     ]);
     $bucket = $_ENV['AWS_BUCKET'] ?? '';
-    $awsTarballPath = sprintf('s3://%s/%s', $bucket, $tarball);
+    $awsTarballPath = sprintf('s3://%s/%s', $bucket, $this->command->tarball);
     $awsRegion = $_ENV['AWS_DEFAULT_REGION'] ?? self::AWS_DEFAULT_REGION;
     $params = $_ENV['AWS_CLI_PARAMS'] ?? '';
 

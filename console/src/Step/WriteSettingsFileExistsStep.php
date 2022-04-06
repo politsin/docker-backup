@@ -2,8 +2,6 @@
 
 namespace App\Step;
 
-use App\Command\CommandInterface;
-
 /**
  * Check settings for exists.
  */
@@ -13,8 +11,6 @@ class WriteSettingsFileExistsStep extends StepBase {
    * Run.
    */
   public function run() : bool {
-    $this->command->msg('Step: Check settings for exists');
-
     $this->command->settingsFilePath = implode('/', [
       $this->command->settingsPath,
       $this->command->settingsFileName,

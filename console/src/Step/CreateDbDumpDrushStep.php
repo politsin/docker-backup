@@ -14,8 +14,6 @@ class CreateDbDumpDrushStep extends StepBase {
    * Run.
    */
   public function run() : bool {
-    $this->command->msg(sprintf('Dump: "%s"', $this->command->dbdump));
-
     $drush = sprintf('/usr/local/bin/drush --root=%s', self::SITE_ROOT);
     $dbfile = $_ENV['DBFILE'] ?? implode('/', [self::SITE_ROOT, self::DUMP_FILE_NAME]);
     $dbskip = $_ENV['DBSKIP'] ?? '';

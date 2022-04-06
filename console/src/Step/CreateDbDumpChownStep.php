@@ -15,11 +15,8 @@ class CreateDbDumpChownStep extends StepBase {
    */
   public function run() : bool {
     $dbfile = $_ENV['DBFILE'] ?? implode('/', [self::SITE_ROOT, self::DUMP_FILE_NAME]);
-    $this->command->msg(sprintf('Chown: "%s"', $dbfile));
 
-    $cmd = sprintf(
-      'chown www-data:www-data %s', $dbfile
-    );
+    $cmd = sprintf('chown www-data:www-data %s', $dbfile);
     $result = $this->command->runProcess($cmd);
 
     $this->command->logExecute(

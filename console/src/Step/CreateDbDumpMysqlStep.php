@@ -18,8 +18,6 @@ class CreateDbDumpMysqlStep extends StepBase {
    * Run.
    */
   public function run() : bool {
-    $this->command->msg(sprintf('Dump: "%s"', $this->command->dbdump));
-
     $dbuser = $_ENV['DBUSER'] ?: self::DBUSER;
     $dbpass = $_ENV['DBPASS'] ?: self::DBPASS;
     $dbname = $_ENV['DBNAME'] ?: self::DBNAME;

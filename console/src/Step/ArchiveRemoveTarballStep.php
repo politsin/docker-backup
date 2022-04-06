@@ -13,16 +13,10 @@ class ArchiveRemoveTarballStep extends StepBase {
    * Run.
    */
   public function run() : bool {
-    $tarball = $this->command->tarball;
-
-    $this->command->msg(
-      sprintf('Step: Remove tarball "%s"', $tarball)
-    );
-
     $consolePath = $_ENV['CONSOLE_PATHS'] ?? self::CONSOLE_PATHS;
 
     $cmd = sprintf(
-      'rm -f %s', implode('/', [$consolePath, $tarball])
+      'rm -f %s', implode('/', [$consolePath, $this->command->tarball])
     );
     $result = $this->command->runProcess($cmd);
     $this->command->logExecute(
