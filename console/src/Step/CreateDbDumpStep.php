@@ -16,7 +16,7 @@ class CreateDbDumpStep extends StepBase {
     $this->command->dbdump = $_ENV['DBDUMP'] ?: self::DEFAULT_DUMP_TYPE;
 
     $this->command->msg(
-      sprintf('Step: Create "%s" dump', $this->command->dbdump)
+      sprintf('Create "%s" dump', $this->command->dbdump)
     );
 
     $result = FALSE;

@@ -16,7 +16,7 @@ class SetTimezoneStep extends StepBase {
     $timeZone = $_ENV['TIMEZONE'] ?? self::DEFAULT_TIMEZONE;
 
     $this->command->msg(
-      sprintf('Step: Set timezone to "%s"', $timeZone)
+      sprintf('Set timezone to "%s"', $timeZone)
     );
 
     $cmd = sprintf('echo "%s" > /etc/timezone', $timeZone);

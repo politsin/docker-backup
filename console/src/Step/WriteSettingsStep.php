@@ -11,7 +11,7 @@ class WriteSettingsStep extends StepBase {
    * Run.
    */
   public function run() : bool {
-    $this->command->msg('Step: Write settings php');
+    $this->command->msg('Write settings php');
 
     $this->command->settingsPath = '/var/www/html/sites/default';
     $this->command->settingsFileName = 'settings.php';

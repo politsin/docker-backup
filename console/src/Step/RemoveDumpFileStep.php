@@ -14,7 +14,7 @@ class RemoveDumpFileStep extends StepBase {
    * Run.
    */
   public function run() : bool {
-    $this->command->msg('Step: Remove dump file');
+    $this->command->msg('Remove dump file');
 
     $dbfile = $_ENV['DBFILE'] ?? implode('/', [self::SITE_ROOT, self::DUMP_FILE_NAME]);
 

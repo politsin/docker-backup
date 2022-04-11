@@ -16,7 +16,7 @@ class RestoreDbDumpStep extends StepBase {
     $this->command->dbrestore = $_ENV['DBRESTORE'] ?: self::DEFAULT_DBRESTORE_TYPE;
 
     $this->command->msg(
-      sprintf('Step: Restore "%s" dump', $this->command->dbrestore)
+      sprintf('Restore "%s" dump', $this->command->dbrestore)
     );
 
     $result = FALSE;

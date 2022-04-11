@@ -13,7 +13,7 @@ class ArchiveStep extends StepBase {
    * Run.
    */
   public function run() : bool {
-    $this->command->msg('Step: Archive');
+    $this->command->msg('Archive');
 
     $this->command->tarball = $this->getTarballName(
       $_ENV['BACKUP_NAME'] ?? 'bcp-d-0-dockup-example'
