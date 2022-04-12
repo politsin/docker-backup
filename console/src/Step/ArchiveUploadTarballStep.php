@@ -15,7 +15,7 @@ class ArchiveUploadTarballStep extends StepBase {
    */
   public function run() : bool {
     if (empty($_ENV['AWS_ACCESS_KEY_ID']) || empty($_ENV['AWS_SECRET_ACCESS_KEY'])) {
-      $this->command->msg('Failed with empty key or secret');
+      $this->command->sendMessage('Failed with empty key or secret');
       return FALSE;
     }
 

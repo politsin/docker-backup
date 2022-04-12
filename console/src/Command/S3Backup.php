@@ -19,8 +19,7 @@ class S3Backup extends CommandBase implements CommandInterface {
    * Config.
    */
   protected function configure() {
-    $this
-      ->setName('s3backup')
+    $this->setName('s3backup')
       ->setDescription('backup data to s3')
       ->setHelp('See Drupal\backup\Service\Backup');
   }
@@ -32,20 +31,21 @@ class S3Backup extends CommandBase implements CommandInterface {
     InputInterface $input,
     OutputInterface $output
   ) : int {
-
     $this->io = new SymfonyStyle($input, $output);
-
-    $this->msg(
-      $this->getHelloMessage("🐹")
-    );
-
-    (new SetTimezoneStep($this))->run();
-    (new CreateDbDumpStep($this))->run();
-    (new ArchiveStep($this))->run();
-    (new RemoveDumpFileStep($this))->run();
-
-    $this->msg('Парам парам пам!');
-
+    $this->sendMessage('Start backup', 'START');
+    if (!(new SetTimezoneStep($this))->run()) {
+      return 101;
+    }
+    elseif (!(new CreateDbDumpStep($this))->run()) {
+      return 102;
+    }
+    elseif (!(new ArchiveStep($this))->run()) {
+      return 103;
+    }
+    elseif (!(new RemoveDumpFileStep($this))->run()) {
+      return 104;
+    }
+    $this->sendMessage('Finish backup', 'STOP');
     return 0;
   }
 

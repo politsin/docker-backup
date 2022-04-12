@@ -15,14 +15,13 @@ use App\Step\RemoveDumpFileStep;
  */
 class S3Restore extends CommandBase implements CommandInterface {
 
-  const CODE_DOWNLOAD_ERROR = 10;
+  const CODE_DOWNLOAD_ERROR = 201;
 
   /**
    * Config.
    */
   protected function configure() {
-    $this
-      ->setName('s3restore')
+    $this->setName('s3restore')
       ->setDescription('restore data from s3')
       ->setHelp('See Drupal\backup\Service\BackupRestore');
   }
@@ -37,20 +36,21 @@ class S3Restore extends CommandBase implements CommandInterface {
 
     $this->io = new SymfonyStyle($input, $output);
 
-    $this->msg(
-      $this->getHelloMessage("🐼")
-    );
+    $this->sendMessage('Start restore', 'START');
 
     if (!(new DownloadBackupStep($this))->run()) {
-      $this->msg('Download error');
       return self::CODE_DOWNLOAD_ERROR;
     }
-    (new WriteSettingsStep($this))->run();
-    (new RestoreDbDumpStep($this))->run();
-    (new RemoveDumpFileStep($this))->run();
-
-    $this->msg('Парам парам пам!');
-    
+    elseif (!(new WriteSettingsStep($this))->run()) {
+      return 202;
+    }
+    elseif (!(new RestoreDbDumpStep($this))->run()) {
+      return 203;
+    }
+    elseif (!(new RemoveDumpFileStep($this))->run()) {
+      return 204;
+    }
+    $this->sendMessage('Finish restore', 'STOP');
     return 0;
   }
 

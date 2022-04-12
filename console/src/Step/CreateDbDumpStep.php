@@ -15,7 +15,7 @@ class CreateDbDumpStep extends StepBase {
   public function run() : bool {
     $this->command->dbdump = $_ENV['DBDUMP'] ?: self::DEFAULT_DUMP_TYPE;
 
-    $this->command->msg(
+    $this->command->sendMessage(
       sprintf('Create "%s" dump', $this->command->dbdump)
     );
 
@@ -32,7 +32,7 @@ class CreateDbDumpStep extends StepBase {
     if ($result) {
       return (new CreateDbDumpChownStep($this->command))->run();
     }
-    return FALSE;
+    return TRUE;
   }
 
 }

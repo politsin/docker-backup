@@ -13,14 +13,32 @@ use Symfony\Component\Process\Process;
  */
 class CommandBase extends Command {
 
-  /**
-   * Exec.
-   */
-  public function getHelloMessage(string $emoji) : string {
-    $date_time_zone = new \DateTimeZone($_ENV['TIMEZONE']);
-    $date_time = new \DateTime('now', $date_time_zone);
-    return sprintf("Hello, %s [%s]", $emoji, $date_time->format('d.m.Y H:i:s'));
-  }
+  const CHANNELS_FOR_TYPES = [
+    'OK' => ['console'],
+    'FAIL' => ['console', 'telega', 'slack'],
+    'START' => ['console', 'telega'],
+    'STOP' => ['console', 'telega', 'slack'],
+  ];
+  const EMOJI_FOR_CHANELS = [
+    'console' => [
+      'OK' => NULL,
+      'FAIL' => "🔥",
+      'START' => "🚀",
+      'STOP' => "☘️",
+    ],
+    'slack' => [
+      'OK' => NULL,
+      'FAIL' => ':fire: @all',
+      'START' => ':rocket:',
+      'STOP' => ':shamrock:',
+    ],
+    'telega' => [
+      'OK' => NULL,
+      'FAIL' => "🔥",
+      'START' => "🚀",
+      'STOP' => "☘️",
+    ],
+  ];
 
   /**
    * Exec log.
@@ -31,11 +49,15 @@ class CommandBase extends Command {
     string $error_message
   ) : void {
     if ($success) {
-      return;
+      $this->sendMessage(
+        sprintf('SUCCESS: "%s"', trim($success_message))
+      );
     }
-    $this->msg(
-      sprintf('ERROR: "%s"', trim($error_message))
-    );
+    else {
+      $this->sendMessage(
+        sprintf('ERROR: "%s"', trim($error_message)), 'FAIL'
+      );
+    }
   }
 
   /**
@@ -60,19 +82,38 @@ class CommandBase extends Command {
   }
 
   /**
+   * Send message.
+   */
+  public function sendMessage(string $message, string $type = NULL) {
+    if (empty(self::CHANNELS_FOR_TYPES[$type])) {
+      $channel = $_ENV['MESSAGE_CHANNEL'] ?? 'console';
+      $this->msg(
+        sprintf('[%s] %s', $_ENV['BACKUP_NAME'], $message), $channel
+      );
+      return;
+    }
+    foreach (self::CHANNELS_FOR_TYPES[$type] as $channel) {
+      $emoji = self::EMOJI_FOR_CHANELS[$channel][$type] ?? NULL;
+      $this->msg(
+        sprintf('%s[%s] %s', $emoji, $_ENV['BACKUP_NAME'], $message), $channel
+      );
+    }
+  }
+
+  /**
    * Common Sender.
    */
-  public function msg($message) {
-    $prefix = implode(' | ', [$_ENV['APP_KEY'], $_ENV['APP_TEMPLATE'], '']);
-    $message = $prefix . $message;
-
-    $message_channel = $_ENV['MESSAGE_CHANNEL'] ?? 'console';
-
+  private function msg(string $message, string $channel) {
     $result = FALSE;
-    switch ($message_channel) {
+    switch ($channel) {
 
       case 'console':
-        $result = $this->io->text($message);
+        $date_time_zone = new \DateTimeZone($_ENV['TIMEZONE']);
+        $date_time = new \DateTime('now', $date_time_zone);
+        $date_time_line = $date_time->format('d.m.Y H:i:s');
+        $result = $this->io->text(
+          implode(' | ', [$date_time_line, $_ENV['APP_KEY'], $_ENV['APP_TEMPLATE'], $message])
+        );
         break;
 
       case 'slack':
@@ -124,7 +165,7 @@ class CommandBase extends Command {
     $webhook = "{$_ENV['MATTERMOST_HOST']}/{$_ENV['MATTERMOST_HOOK']}";
     $payload['text'] = str_replace("%", "%25", $payload['text']);
     $payload['text'] = str_replace("&", "%26", $payload['text']);
-    $client = new Client(['timeout' => 0.1]);
+    $client = new Client(['timeout' => 1]);
     try {
       $response = $client->post($webhook, [
         'json' => $payload,

@@ -11,7 +11,7 @@ class DownloadBackupStep extends StepBase {
    * Run.
    */
   public function run() : bool {
-    $this->command->msg('Download backup');
+    $this->command->sendMessage('Download backup');
     $this->command->app_key = $_ENV['APP_KEY'] ?? '';
 
     if (!(new DownloadBackupDetermineNameStep($this->command))->run()) {

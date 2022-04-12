@@ -15,7 +15,7 @@ class SetTimezoneStep extends StepBase {
   public function run() : bool {
     $timeZone = $_ENV['TIMEZONE'] ?? self::DEFAULT_TIMEZONE;
 
-    $this->command->msg(
+    $this->command->sendMessage(
       sprintf('Set timezone to "%s"', $timeZone)
     );
 
