@@ -84,9 +84,9 @@ class CommandBase extends Command {
   /**
    * Send message.
    */
-  public function sendMessage(string $message, string $type = NULL) {
+  public function sendMessage(string $message, string $type = 'OK') {
     if (empty(self::CHANNELS_FOR_TYPES[$type])) {
-      $channel = $_ENV['MESSAGE_CHANNEL'] ?? 'console';
+      $channel = $_ENV['MESSAGE_CHANNEL'] ?: 'console';
       $this->msg(
         sprintf('[%s] %s', $_ENV['BACKUP_NAME'], $message), $channel
       );
