@@ -7,26 +7,26 @@ namespace App\Step;
  */
 class RestoreDbDumpStep extends StepBase {
 
-  const DEFAULT_DBRESTORE_TYPE = 'mysql';
-
   /**
    * Run.
    */
   public function run() : bool {
-    $this->command->dbrestore = $_ENV['DBRESTORE'] ?: self::DEFAULT_DBRESTORE_TYPE;
+    if (empty($_ENV['DBDUMP'])) {
+      $this->command->sendMessage('Without dbdump');
+      return TRUE;
+    }
 
     $this->command->sendMessage(
-      sprintf('Restore "%s" dump', $this->command->dbrestore)
+      sprintf('Restore "%s" dump', $_ENV['DBDUMP'])
     );
 
-    $result = FALSE;
-    if ($this->command->dbrestore == 'drush') {
+    if ($_ENV['DBDUMP'] == 'drush') {
       return (new RestoreDbDumpDrushStep($this->command))->run();
     }
-    elseif ($this->command->dbrestore == 'mysql') {
+    elseif ($_ENV['DBDUMP'] == 'mysql') {
       return (new RestoreDbDumpMysqlStep($this->command))->run();
     }
-    elseif ($this->command->dbrestore == 'postgre') {
+    elseif ($_ENV['DBDUMP'] == 'postgre') {
       return (new RestoreDbDumpPostgreStep($this->command))->run();
     }
 

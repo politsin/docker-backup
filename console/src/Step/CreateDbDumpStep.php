@@ -7,32 +7,33 @@ namespace App\Step;
  */
 class CreateDbDumpStep extends StepBase {
 
-  const DEFAULT_DUMP_TYPE = 'mysql';
-
   /**
    * Run.
    */
   public function run() : bool {
-    $this->command->dbdump = $_ENV['DBDUMP'] ?: self::DEFAULT_DUMP_TYPE;
+    if (empty($_ENV['DBDUMP'])) {
+      $this->command->sendMessage('Without dbdump');
+      return TRUE;
+    }
 
     $this->command->sendMessage(
-      sprintf('Create "%s" dump', $this->command->dbdump)
+      sprintf('Create "%s" dump', $_ENV['DBDUMP'])
     );
 
     $result = FALSE;
-    if ($this->command->dbdump == 'drush') {
+    if ($_ENV['DBDUMP'] == 'drush') {
       $result = (new CreateDbDumpDrushStep($this->command))->run();
     }
-    elseif ($this->command->dbdump == 'mysql') {
+    elseif ($_ENV['DBDUMP'] == 'mysql') {
       $result = (new CreateDbDumpMysqlStep($this->command))->run();
     }
-    elseif ($this->command->dbdump == 'postgre') {
+    elseif ($_ENV['DBDUMP'] == 'postgre') {
       $result = (new CreateDbDumpPostgreStep($this->command))->run();
     }
     if ($result) {
       return (new CreateDbDumpChownStep($this->command))->run();
     }
-    return TRUE;
+    return FALSE;
   }
 
 }
