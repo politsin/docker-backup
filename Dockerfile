@@ -63,14 +63,26 @@ RUN apt update && \
     rm -rf /usr/share/man/??_*
 
 #DRUSH:::
-RUN wget https://github.com/drush-ops/drush-launcher/releases/latest/download/drush.phar -q -O drush \
-    && chmod +x drush \
-    && mv drush /usr/local/bin/drush
+RUN wget https://github.com/drush-ops/drush-launcher/releases/latest/download/drush.phar -q -O drush && \
+    chmod +x drush && \
+    mv drush /usr/local/bin/drush
 
 #Composer:::
-RUN wget https://getcomposer.org/installer -q -O composer-setup.php \
-    && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
-    && chmod +x /usr/local/bin/composer
+RUN wget https://getcomposer.org/installer -q -O composer-setup.php && \
+    php composer-setup.php --install-dir=/usr/local/bin --filename=composer && \
+    chmod +x /usr/local/bin/composer
+#Composer-FIX:::
+RUN git clone https://github.com/composer/composer.git ~/composer-build && \
+    composer install  -o -d ~/composer-build && \
+    wget https://raw.githubusercontent.com/politsin/snipets/master/patch/composer.patch -q -O ~/composer-build/composer.patch  && \
+    cd ~/composer-build && patch -p1 < composer.patch && \
+    php -d phar.readonly=0 bin/compile && \
+    rm /usr/local/bin/composer && \
+    php composer.phar install && \
+    php composer.phar update && \
+    mv ~/composer-build/composer.phar /usr/local/bin/composer && \
+    rm -rf ~/composer-buil  && \
+    chmod +x /usr/local/bin/composer
 
 #COPY script & config:::
 RUN mkdir -p /opt/console/src/Command
