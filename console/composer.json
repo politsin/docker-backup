@@ -18,5 +18,10 @@
         "psr-4": {
             "App\\": "src/"
         }
+    },
+    "config": {
+        "allow-plugins": {
+            "cweagans/composer-patches": true
+        }
     }
 }
