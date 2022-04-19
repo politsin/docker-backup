@@ -45,11 +45,13 @@ class DownloadBackupDetermineNameStep extends StepBase {
     if (empty($result['success'])) {
       return NULL;
     }
-    $pattern = sprintf('/\s(bcp\-\S\-%s.[\-\d\S]+)$/', $this->command->app_key);
-    if (preg_match($pattern, $result['output'] ?? '', $matches)) {
-      return $matches[1] ?? NULL;
+    if (empty($result['output'])) {
+      return NULL;
     }
-    return NULL;
+    $parts = explode(' ', $result['output']);
+    return trim(
+      end($parts)
+    );
   }
 
 }
