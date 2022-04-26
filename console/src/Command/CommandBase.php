@@ -78,6 +78,7 @@ class CommandBase extends Command {
       'success' => $process->isSuccessful(),
       'output' => $process->getOutput(),
       'error' => $process->getErrorOutput(),
+      'code' => $process->getExitCode(),
     ];
   }
 

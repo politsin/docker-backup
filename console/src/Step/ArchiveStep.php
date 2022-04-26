@@ -19,10 +19,14 @@ class ArchiveStep extends StepBase {
       $_ENV['BACKUP_NAME'] ?? 'bcp-d-0-dockup-example'
     );
 
+    (new RemoveTrashStep($this->command))->run();
+
     if (!(new ArchiveCreateTarballStep($this->command))->run()) {
+      (new ArchiveRemoveTarballStep($this->command))->run();
       return FALSE;
     }
     elseif (!(new ArchiveUploadTarballStep($this->command))->run()) {
+      (new ArchiveRemoveTarballStep($this->command))->run();
       return FALSE;
     }
     elseif (!(new ArchiveRemoveTarballStep($this->command))->run()) {

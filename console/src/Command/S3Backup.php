@@ -40,6 +40,7 @@ class S3Backup extends CommandBase implements CommandInterface {
       return 102;
     }
     elseif (!(new ArchiveStep($this))->run()) {
+      (new RemoveDumpFileStep($this))->run();
       return 103;
     }
     elseif (!(new RemoveDumpFileStep($this))->run()) {
