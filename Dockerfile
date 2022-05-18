@@ -54,6 +54,7 @@ RUN apt update && \
                    php8.1-mbstring \
                    php-xml \
                    php-json \
+                   php-pear \
                    php-ssh2 \
                    php-redis \
                    php-sqlite3 && \
