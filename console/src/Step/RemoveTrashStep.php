@@ -17,7 +17,7 @@ class RemoveTrashStep extends StepBase {
       return TRUE;
     }
     $commands = [
-      'rm -r /var/www/console',
+      'rm -r /var/www/old',
       'rm -f /var/www/html/adminer.php',
       'rm -f /var/www/html/adminer.sql',
     ];

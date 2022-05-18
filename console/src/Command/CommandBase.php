@@ -7,6 +7,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ConnectException;
 use Symfony\Component\Process\Process;
+use Bluerhinos\phpMQTT;
 
 /**
  * Default StoreTemplate.
@@ -14,12 +15,18 @@ use Symfony\Component\Process\Process;
 class CommandBase extends Command {
 
   const CHANNELS_FOR_TYPES = [
-    'OK' => ['console'],
-    'FAIL' => ['console', 'telega', 'slack'],
-    'START' => ['console', 'telega'],
-    'STOP' => ['console', 'telega', 'slack'],
+    'OK' => ['console', 'mqtt'],
+    'FAIL' => ['console', 'telega', 'slack', 'mqtt'],
+    'START' => ['console', 'mqtt'],
+    'STOP' => ['console', 'slack', 'mqtt'],
   ];
   const EMOJI_FOR_CHANELS = [
+    'mqtt' => [
+      'OK' => NULL,
+      'FAIL' => "🔥",
+      'START' => "🚀",
+      'STOP' => "☘️",
+    ],
     'console' => [
       'OK' => NULL,
       'FAIL' => "🔥",
@@ -127,6 +134,10 @@ class CommandBase extends Command {
         $result = $this->telega($message);
         break;
 
+      case 'mqtt':
+        $result = $this->mqtt($message);
+        break;
+
       default:
     }
 
@@ -182,5 +193,41 @@ class CommandBase extends Command {
     return $result;
   }
 
+  /**
+   * PhpMQTT.
+   */
+  private function mqtt(string $message) {
+    $client_id = 'phpMQTT-client' . $_ENV['APP_KEY'];
+    $mqtt = @(new phpMQTT($_ENV['MQTT_HOST'], $_ENV['MQTT_PORT'], $client_id));
+    if ($mqtt->connect(TRUE, NULL, $_ENV['MQTT_USER'], $_ENV['MQTT_PASS'])) {
+      $qos = 0;
+      $retain = FALSE;
+      // @todo отправлять в правильный топик
+      // $mqtt->publish(
+      //   $this->getMqttTopic(), $message, $qos, $retain
+      // );
+      $mqtt->publish(
+        'node/5342/logs', $message, $qos, $retain
+      );
+      $mqtt->close();
+    }
+    else {
+      $this->msg("Can't connect to mqtt", 'console');
+    }
+  }
+
+  /**
+   * MQTT topic.
+   */
+  private function getMqttTopic() : string {
+    $period = 'period';
+    if (preg_match('/bcp-([a-z])-/', $_ENV['BACKUP_NAME'], $matches)) {
+      $period = $matches[1];
+    }
+    return sprintf(
+      'backup/%s/%s/%s/%s',
+      $_ENV['SERVER_NID'], $_ENV['APP_KEY'], $period, 'step'
+    );
+  }
 
 }
