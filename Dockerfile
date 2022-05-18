@@ -27,6 +27,7 @@ RUN apt update && \
                    unzip && \
     apt install -y sqlite3 \
                    mysql-client \
+                   redis-tools \
                    postgresql-client &&  \
     apt install -y awscli \
                    python3-pip && \
@@ -54,6 +55,7 @@ RUN apt update && \
                    php-xml \
                    php-json \
                    php-ssh2 \
+                   php-redis \
                    php-sqlite3 && \
     apt autoremove -y && \
     apt clean && \
@@ -61,6 +63,9 @@ RUN apt update && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /usr/share/man/?? && \
     rm -rf /usr/share/man/??_*
+
+#Redis:::
+RUN pecl install redis
 
 #DRUSH:::
 RUN wget https://github.com/drush-ops/drush-launcher/releases/latest/download/drush.phar -q -O drush && \
