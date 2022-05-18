@@ -46,6 +46,7 @@ RUN apt update && \
     apt update && \
     apt install -y php8.1 \
                    php8.1-xml \
+                   php8.1-dev \
                    php8.1-dom \
                    php8.1-zip \
                    php8.1-curl \
