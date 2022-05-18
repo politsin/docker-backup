@@ -66,7 +66,8 @@ RUN apt update && \
     rm -rf /usr/share/man/??_*
 
 #Redis:::
-RUN pecl install redis
+RUN pecl channel-update pecl.php.net && \
+    pecl install redis
 
 #DRUSH:::
 RUN wget https://github.com/drush-ops/drush-launcher/releases/latest/download/drush.phar -q -O drush && \
