@@ -11,6 +11,7 @@ class WriteSettingsStep extends StepBase {
    * Run.
    */
   public function run() : bool {
+    $this->command->sendMqttMessage('START', 'WriteSettingsStep');
     $this->command->sendMessage('Write settings php');
 
     $this->command->settingsPath = '/var/www/html/sites/default';
@@ -25,6 +26,8 @@ class WriteSettingsStep extends StepBase {
     elseif (!(new WriteSettingsWritePasswordStep($this->command))->run()) {
       return FALSE;
     }
+
+    $this->command->sendMqttMessage('FINISH', 'WriteSettingsStep');
     return TRUE;
   }
 

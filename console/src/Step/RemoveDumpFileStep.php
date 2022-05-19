@@ -14,6 +14,7 @@ class RemoveDumpFileStep extends StepBase {
    * Run.
    */
   public function run() : bool {
+    $this->command->sendMqttMessage('START', 'RemoveDumpFileStep');
     $this->command->sendMessage('Remove dump file');
 
     $dbfile = $_ENV['DBFILE'] ?? implode('/', [self::SITE_ROOT, self::DUMP_FILE_NAME]);
@@ -26,6 +27,9 @@ class RemoveDumpFileStep extends StepBase {
       $result['error'] ?? sprintf('Failed to rm %s', $dbfile)
     );
 
+    if (!empty($result['success'])) {
+      $this->command->sendMqttMessage('FINISH', 'RemoveDumpFileStep');
+    }
     return $result['success'] ?? FALSE;
   }
 

@@ -11,8 +11,8 @@ class DownloadBackupStep extends StepBase {
    * Run.
    */
   public function run() : bool {
+    $this->command->sendMqttMessage('START', 'DownloadBackupStep');
     $this->command->sendMessage('Download backup');
-    $this->command->app_key = $_ENV['APP_KEY'] ?? '';
 
     if (!(new DownloadBackupDetermineNameStep($this->command))->run()) {
       return FALSE;
@@ -24,6 +24,7 @@ class DownloadBackupStep extends StepBase {
       return FALSE;
     }
 
+    $this->command->sendMqttMessage('FINISH', 'DownloadBackupStep');
     return TRUE;
   }
 

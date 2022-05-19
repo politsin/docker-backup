@@ -33,24 +33,29 @@ class S3Restore extends CommandBase implements CommandInterface {
     InputInterface $input,
     OutputInterface $output
   ) : int {
-
     $this->io = new SymfonyStyle($input, $output);
-
+    $this->sendMqttMessage('START', 'start');
     $this->sendMessage('Start restore', 'START');
 
     if (!(new DownloadBackupStep($this))->run()) {
+      $this->sendMqttMessage('ERROR', 'DownloadBackupStep');
       return self::CODE_DOWNLOAD_ERROR;
     }
     elseif (!(new WriteSettingsStep($this))->run()) {
+      $this->sendMqttMessage('ERROR', 'WriteSettingsStep');
       return 202;
     }
     elseif (!(new RestoreDbDumpStep($this))->run()) {
+      $this->sendMqttMessage('ERROR', 'RestoreDbDumpStep');
       return 203;
     }
     elseif (!(new RemoveDumpFileStep($this))->run()) {
+      $this->sendMqttMessage('ERROR', 'RemoveDumpFileStep');
       return 204;
     }
+
     $this->sendMessage('Finish restore', 'STOP');
+    $this->sendMqttMessage('FINISH', 'finish');
     return 0;
   }
 

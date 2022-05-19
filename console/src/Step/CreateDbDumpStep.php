@@ -15,7 +15,7 @@ class CreateDbDumpStep extends StepBase {
       $this->command->sendMessage('Without dbdump');
       return TRUE;
     }
-
+    $this->command->sendMqttMessage('START', 'CreateDbDumpStep');
     $this->command->sendMessage(
       sprintf('Create "%s" dump', $_ENV['DBDUMP'])
     );
@@ -30,8 +30,9 @@ class CreateDbDumpStep extends StepBase {
     elseif ($_ENV['DBDUMP'] == 'postgre') {
       $result = (new CreateDbDumpPostgreStep($this->command))->run();
     }
-    if ($result) {
-      return (new CreateDbDumpChownStep($this->command))->run();
+    if ($result && (new CreateDbDumpChownStep($this->command))->run()) {
+      $this->command->sendMqttMessage('FINISH', 'CreateDbDumpStep');
+      return TRUE;
     }
     return FALSE;
   }

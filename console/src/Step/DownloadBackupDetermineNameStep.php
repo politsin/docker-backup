@@ -13,7 +13,7 @@ class DownloadBackupDetermineNameStep extends StepBase {
   public function run() : bool {
     $bucket = $_ENV['AWS_BUCKET'] ?? '';
     $params = $_ENV['AWS_CLI_PARAMS'] ?? '';
-    $app_key = $this->command->app_key;
+    $app_key = $_ENV['APP_KEY'] ?? '';
 
     $cmd = sprintf(
       'aws s3 ls s3://%s %s | grep %s | sort -r | head -n1',

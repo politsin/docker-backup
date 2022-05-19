@@ -15,21 +15,26 @@ class RestoreDbDumpStep extends StepBase {
       $this->command->sendMessage('Without dbdump');
       return TRUE;
     }
-
+    $this->command->sendMqttMessage('START', 'RestoreDbDumpStep');
     $this->command->sendMessage(
       sprintf('Restore "%s" dump', $_ENV['DBDUMP'])
     );
 
+    $result = FALSE;
     if ($_ENV['DBDUMP'] == 'drush') {
-      return (new RestoreDbDumpDrushStep($this->command))->run();
+      $result = (new RestoreDbDumpDrushStep($this->command))->run();
     }
     elseif ($_ENV['DBDUMP'] == 'mysql') {
-      return (new RestoreDbDumpMysqlStep($this->command))->run();
+      $result = (new RestoreDbDumpMysqlStep($this->command))->run();
     }
     elseif ($_ENV['DBDUMP'] == 'postgre') {
-      return (new RestoreDbDumpPostgreStep($this->command))->run();
+      $result = (new RestoreDbDumpPostgreStep($this->command))->run();
     }
 
+    if ($result) {
+      $this->command->sendMqttMessage('FINISH', 'RestoreDbDumpStep');
+      return TRUE;
+    }
     return FALSE;
   }
 

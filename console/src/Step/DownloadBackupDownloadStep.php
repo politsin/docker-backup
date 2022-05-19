@@ -21,7 +21,7 @@ class DownloadBackupDownloadStep extends StepBase {
     );
     $this->command->local_tarball_path = sprintf(
       'backup_%s.tar.gz',
-      $this->command->app_key,
+      $_ENV['APP_KEY'] ?? '',
     );
 
     $cmd = sprintf(

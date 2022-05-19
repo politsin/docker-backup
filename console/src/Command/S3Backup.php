@@ -32,21 +32,29 @@ class S3Backup extends CommandBase implements CommandInterface {
     OutputInterface $output
   ) : int {
     $this->io = new SymfonyStyle($input, $output);
+    $this->sendMqttMessage('START', 'start');
     $this->sendMessage('Start backup', 'START');
+
     if (!(new SetTimezoneStep($this))->run()) {
+      $this->sendMqttMessage('ERROR', 'SetTimezoneStep');
       return 101;
     }
     elseif (!(new CreateDbDumpStep($this))->run()) {
+      $this->sendMqttMessage('ERROR', 'CreateDbDumpStep');
       return 102;
     }
     elseif (!(new ArchiveStep($this))->run()) {
+      $this->sendMqttMessage('ERROR', 'ArchiveStep');
       (new RemoveDumpFileStep($this))->run();
       return 103;
     }
     elseif (!(new RemoveDumpFileStep($this))->run()) {
+      $this->sendMqttMessage('ERROR', 'RemoveDumpFileStep');
       return 104;
     }
+
     $this->sendMessage('Finish backup', 'STOP');
+    $this->sendMqttMessage('FINISH', 'finish');
     return 0;
   }
 

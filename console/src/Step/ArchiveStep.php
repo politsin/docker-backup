@@ -13,6 +13,7 @@ class ArchiveStep extends StepBase {
    * Run.
    */
   public function run() : bool {
+    $this->command->sendMqttMessage('START', 'ArchiveStep');
     $this->command->sendMessage('Archive');
 
     $this->command->tarball = $this->getTarballName(
@@ -32,6 +33,7 @@ class ArchiveStep extends StepBase {
     elseif (!(new ArchiveRemoveTarballStep($this->command))->run()) {
       return FALSE;
     }
+    $this->command->sendMqttMessage('FINISH', 'ArchiveStep');
     return TRUE;
   }
 
