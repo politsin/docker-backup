@@ -34,7 +34,7 @@ class S3Restore extends CommandBase implements CommandInterface {
     OutputInterface $output
   ) : int {
     $this->io = new SymfonyStyle($input, $output);
-    $this->sendMqttMessage('START', 'start');
+    $this->sendMqttMessage('START', 'S3Restore');
     $this->sendMessage('Start restore', 'START');
 
     if (!(new DownloadBackupStep($this))->run()) {
@@ -55,7 +55,7 @@ class S3Restore extends CommandBase implements CommandInterface {
     }
 
     $this->sendMessage('Finish restore', 'STOP');
-    $this->sendMqttMessage('FINISH', 'finish');
+    $this->sendMqttMessage('FINISH', 'S3Restore');
     return 0;
   }
 

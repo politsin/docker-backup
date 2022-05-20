@@ -32,7 +32,7 @@ class S3Backup extends CommandBase implements CommandInterface {
     OutputInterface $output
   ) : int {
     $this->io = new SymfonyStyle($input, $output);
-    $this->sendMqttMessage('START', 'start');
+    $this->sendMqttMessage('START', 'S3Backup');
     $this->sendMessage('Start backup', 'START');
 
     if (!(new SetTimezoneStep($this))->run()) {
@@ -54,7 +54,7 @@ class S3Backup extends CommandBase implements CommandInterface {
     }
 
     $this->sendMessage('Finish backup', 'STOP');
-    $this->sendMqttMessage('FINISH', 'finish');
+    $this->sendMqttMessage('FINISH', 'S3Backup');
     return 0;
   }
 
