@@ -24,8 +24,8 @@ class CreateDbDumpPostgreStep extends StepBase {
     $dbfile = $_ENV['DBFILE'] ?? implode('/', [self::SITE_ROOT, self::DUMP_FILE_NAME]);
 
     $cmd = sprintf(
-      'pg_dump -U %s %s %s > %s',
-      $dbuser, $dbhost, $dbname, $dbfile
+      'pg_dump --username=%s --dbname=%s > %s',
+      $dbuser, $dbname, $dbfile
     );
     $result = $this->command->runProcess($cmd);
 

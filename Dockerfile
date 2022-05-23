@@ -1,5 +1,5 @@
 FROM ubuntu:20.04
-MAINTAINER Synapse <mail@synapse-studio.ru>
+LABEL maintainer="Synapse <mail@synapse-studio.ru>"
 
 # Surpress Upstart errors/warning
 RUN dpkg-divert --local --rename --add /sbin/initctl
@@ -7,30 +7,29 @@ RUN ln -sf /bin/true /sbin/initctl
 # Let the conatiner know that there is no tty
 ENV DEBIAN_FRONTEND noninteractive
 
-# APT install:::
+#APT install:::
 RUN apt update && \
     apt install -y software-properties-common \
-                   dnsutils \
-                   net-tools \
-                   inetutils-ping && \
+    dnsutils \
+    net-tools \
+    inetutils-ping && \
     apt install -y mc \
-                   git \
-                   nnn \
-                   zip \
-                   zsh \
-                   curl \
-                   htop \
-                   nano \
-                   ncdu \
-                   sass \
-                   wget \
-                   unzip && \
+    git \
+    nnn \
+    zip \
+    zsh \
+    curl \
+    htop \
+    nano \
+    ncdu \
+    sass \
+    wget \
+    unzip && \
     apt install -y sqlite3 \
-                   mysql-client \
-                   redis-tools \
-                   postgresql-client &&  \
+    mysql-client \
+    redis-tools && \
     apt install -y awscli \
-                   python3-pip && \
+    python3-pip && \
     apt autoremove -y && \
     apt clean && \
     apt autoclean && \
@@ -40,25 +39,34 @@ RUN apt update && \
     rm -rf /usr/share/man/?? && \
     rm -rf /usr/share/man/??_*
 
+#APT postgresql-13:::
+RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
+    echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" | tee /etc/apt/sources.list.d/pgdg.list && \
+    apt update && \
+    apt install -y postgresql-client-13 && \
+    apt autoremove -y && \
+    apt clean && \
+    apt autoclean
+
 #PHP:::
 RUN apt update && \
     LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php && \
     apt update && \
     apt install -y php8.1 \
-                   php8.1-xml \
-                   php8.1-dev \
-                   php8.1-dom \
-                   php8.1-zip \
-                   php8.1-curl \
-                   php8.1-mysql \
-                   php8.1-pgsql \
-                   php8.1-mbstring \
-                   php-xml \
-                   php-json \
-                   php-pear \
-                   php-ssh2 \
-                   php-redis \
-                   php-sqlite3 && \
+    php8.1-xml \
+    php8.1-dev \
+    php8.1-dom \
+    php8.1-zip \
+    php8.1-curl \
+    php8.1-mysql \
+    php8.1-pgsql \
+    php8.1-mbstring \
+    php-xml \
+    php-json \
+    php-pear \
+    php-ssh2 \
+    php-redis \
+    php-sqlite3 && \
     apt autoremove -y && \
     apt clean && \
     apt autoclean && \
