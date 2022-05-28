@@ -29,6 +29,7 @@ RUN apt update && \
     mysql-client \
     redis-tools && \
     apt install -y awscli \
+    python-is-python3 \
     python3-pip && \
     apt autoremove -y && \
     apt clean && \
