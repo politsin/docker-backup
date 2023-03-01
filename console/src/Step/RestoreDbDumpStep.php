@@ -22,7 +22,7 @@ class RestoreDbDumpStep extends StepBase {
 
     $result = FALSE;
     if ($_ENV['DBDUMP'] == 'drush') {
-      $result = (new RestoreDbDumpDrushStep($this->command))->run();
+      $result = (new RestoreDbDumpMysqlStep($this->command))->run();
     }
     elseif ($_ENV['DBDUMP'] == 'mysql') {
       $result = (new RestoreDbDumpMysqlStep($this->command))->run();
