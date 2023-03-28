@@ -3,9 +3,7 @@
         "symfony/console": "^5.0",
         "symfony/process": "^5.0",
         "symfony/dotenv": "^5.0",
-        "bluerhinos/phpmqtt": "^1.0",
-        "cweagans/composer-patches": "^1.7",
-        "influxdata/influxdb-client-php": "^1.9"
+        "cweagans/composer-patches": "^1.7"
     },
     "extra": {
         "patches": {
