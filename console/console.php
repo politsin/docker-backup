@@ -17,6 +17,7 @@ use App\Command\ConnectionCommand;
 $dotenv = new Dotenv();
 $dotenv->load(__DIR__ . '/.env');
 
+
 // Symfony app.
 $app = new Application('Console App', 'v0.1.0');
 $app->add(new S3Backup());

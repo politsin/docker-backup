@@ -102,7 +102,6 @@ RUN git clone https://github.com/composer/composer.git --branch 2.6.0  ~/compose
     chmod +x /usr/local/bin/composer
 
 #COPY script & config:::
-RUN mkdir -p /opt/console/src/Command
 COPY console /opt/console
 
 RUN composer install -d /opt/console
