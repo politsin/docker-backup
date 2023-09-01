@@ -14,7 +14,7 @@ class RestoreDbDumpPostgreStep extends StepBase {
     $this->command->logExecute(
       $result['success'] ?? FALSE,
       'Restore DB dump',
-      $result['error'] ?? 'Function is not ready yet, TODO'
+      $result['error'] ?? 'Function is not ready yet, TODO: psql --username=drupal --dbname=drupal < ~/html/.db.sql'
     );
     return $result['success'] ?? FALSE;
   }
