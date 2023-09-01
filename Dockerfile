@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:20.04
 LABEL maintainer="Synapse <mail@synapse-studio.ru>"
 
 # Surpress Upstart errors/warning
@@ -105,7 +105,8 @@ RUN git clone https://github.com/composer/composer.git --branch 2.6.0  ~/compose
 RUN mkdir -p /opt/console/src/Command
 COPY console /opt/console
 
-RUN cd /opt/console && composer install
+RUN composer install -d /opt/console
+RUN ls /opt/console/vendor
 
 #Fix ownership
 RUN chmod 755 /opt/console/console.php
