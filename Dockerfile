@@ -10,27 +10,31 @@ ENV DEBIAN_FRONTEND noninteractive
 #APT install:::
 RUN apt update && \
     apt install -y software-properties-common \
-    dnsutils \
-    net-tools \
-    inetutils-ping && \
+                   dnsutils \
+                   apt-utils \
+                   net-tools \
+                   inetutils-ping && \
     apt install -y mc \
-    git \
-    nnn \
-    zip \
-    zsh \
-    curl \
-    htop \
-    nano \
-    ncdu \
-    sass \
-    wget \
-    unzip && \
+                   git \
+                   nnn \
+                   zip \
+                   zsh \
+                   curl \
+                   htop \
+                   nano \
+                   ncdu \
+                   sass \
+                   putty \
+                   unzip \
+                   ssmtp \
+                   sshpass \
+                   imagemagick &&  \
     apt install -y sqlite3 \
-    mysql-client \
-    redis-tools && \
+                   redis-tools \
+                   mysql-client && \
     apt install -y awscli \
-    python-is-python3 \
-    python3-pip && \
+                   python-is-python3 \
+                   python3-pip && \
     apt autoremove -y && \
     apt clean && \
     apt autoclean && \
@@ -40,11 +44,11 @@ RUN apt update && \
     rm -rf /usr/share/man/?? && \
     rm -rf /usr/share/man/??_*
 
-#APT postgresql-13:::
+#APT postgresql-15:::
 RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
     echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" | tee /etc/apt/sources.list.d/pgdg.list && \
     apt update && \
-    apt install -y postgresql-client-13 && \
+    apt install -y postgresql-client-15 && \
     apt autoremove -y && \
     apt clean && \
     apt autoclean
@@ -54,20 +58,20 @@ RUN apt update && \
     LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php && \
     apt update && \
     apt install -y php8.1 \
-    php8.1-xml \
-    php8.1-dev \
-    php8.1-dom \
-    php8.1-zip \
-    php8.1-curl \
-    php8.1-mysql \
-    php8.1-pgsql \
-    php8.1-mbstring \
-    php-xml \
-    php-json \
-    php-pear \
-    php-ssh2 \
-    php-redis \
-    php-sqlite3 && \
+                   php8.1-xml \
+                   php8.1-dev \
+                   php8.1-dom \
+                   php8.1-zip \
+                   php8.1-curl \
+                   php8.1-mysql \
+                   php8.1-pgsql \
+                   php8.1-mbstring \
+                   php-xml \
+                   php-json \
+                   php-pear \
+                   php-ssh2 \
+                   php-redis \
+                   php-sqlite3 && \
     apt autoremove -y && \
     apt clean && \
     apt autoclean && \
@@ -87,18 +91,6 @@ RUN wget https://github.com/drush-ops/drush-launcher/releases/latest/download/dr
 #Composer:::
 RUN wget https://getcomposer.org/installer -q -O composer-setup.php && \
     php composer-setup.php --install-dir=/usr/local/bin --filename=composer && \
-    chmod +x /usr/local/bin/composer
-#Composer-FIX:::
-RUN git clone https://github.com/composer/composer.git --branch 2.6.0  ~/composer-build && \
-    composer install  -o -d ~/composer-build && \
-    wget https://raw.githubusercontent.com/politsin/snipets/master/patch/composer.patch -q -O ~/composer-build/composer.patch  && \
-    cd ~/composer-build && patch -p1 < composer.patch && \
-    php -d phar.readonly=0 bin/compile && \
-    rm /usr/local/bin/composer && \
-    php composer.phar install && \
-    php composer.phar update && \
-    mv ~/composer-build/composer.phar /usr/local/bin/composer && \
-    rm -rf ~/composer-build  && \
     chmod +x /usr/local/bin/composer
 
 #COPY script & config:::
